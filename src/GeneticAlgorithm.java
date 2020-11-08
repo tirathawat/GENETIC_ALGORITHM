@@ -1,22 +1,17 @@
 import java.util.ArrayList;
-        import java.util.Collections;
-        import java.util.Random;
+import java.util.Collections;
+import java.util.Random;
 
 class GeneticAlgorithm {
 
     private int populationSize;
     private double crossoverRate;
-    private double mutationRate;
-    private int elitism;
     private Population population;
-    private double avarageFitness;
     private int generation;
 
-    GeneticAlgorithm (int populationSize, double crossoverRate, double mutationRate, int elitism) {
+    GeneticAlgorithm (int populationSize, double crossoverRate) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
-        this.mutationRate = mutationRate;
-        this.elitism = elitism;
         this.generation = 1;
     }
 
@@ -67,14 +62,6 @@ class GeneticAlgorithm {
         return modeFrequency;
     }
 
-    ArrayList<Individual> reproduction() {
-        ArrayList<Individual> selected = new ArrayList<>();
-        int reproductionSize = (int)((crossoverRate/100) * populationSize);
-        for (int i = 0; i < reproductionSize; i++)
-            selected.add(rouletteWheelSelection());
-        return selected;
-    }
-
     private Individual rouletteWheelSelection() {
         population.calculateFitnessRatioEachIndividual();
         while (true) {
@@ -88,72 +75,44 @@ class GeneticAlgorithm {
         }
     }
 
-    private ArrayList<Individual> crossover(Individual parent1, Individual parent2) {
-        //System.out.print("Parent1 = " + parent1.getChromosome() + ", Parent2 = " + parent2.getChromosome());
-        ArrayList<Integer> offspring1 = new ArrayList<>();
-        ArrayList<Integer> offspring2 = new ArrayList<>();
-        for (int i = 1; i < 10; i++) {
-            offspring1.add(null);
-            offspring2.add(null);
-        }
-        offspring1.add(0,1);
-        offspring1.add(1);
-        offspring2.add(0,1);
-        offspring2.add(1);
+    private Individual crossover(Individual parent1, Individual parent2) {
+        System.out.print("Parent1 = " + parent1.getChromosome() + ", Parent2 = " + parent2.getChromosome());
+        ArrayList<Integer> offspring = new ArrayList<>();
+        for (int i = 1; i < 10; i++) offspring.add(null);
+        offspring.add(0,1);
+        offspring.add(1);
         Random random = new Random();
         int startPoint = random.nextInt(3) + 1;
         int endPoint = random.nextInt(9 - startPoint) + (startPoint + 1);
-        //System.out.print(", startPoint = " + startPoint + ", endPoint = " + endPoint);
-        for (int i = startPoint + 1; i <= endPoint; i++) {
-            offspring1.set(i, parent2.getChromosome().get(i));
-            offspring2.set(i, parent1.getChromosome().get(i));
-        }
+        System.out.print(", startPoint = " + startPoint + ", endPoint = " + endPoint);
+        for (int i = startPoint + 1; i <= endPoint; i++) offspring.set(i, parent2.getChromosome().get(i));
         for (int i = 1; i <= 9; i++) {
             if (i <= startPoint || i >= endPoint + 1) {
                 int index = i;
-                while (offspring1.contains(parent1.getChromosome().get(index)))
-                    index = offspring1.indexOf(parent1.getChromosome().get(index));
-                offspring1.set(i, parent1.getChromosome().get(index));
+                while (offspring.contains(parent1.getChromosome().get(index)))
+                    index = offspring.indexOf(parent1.getChromosome().get(index));
+                offspring.set(i, parent1.getChromosome().get(index));
             }
         }
-        for (int i = 1; i <= 9; i++) {
-            if (i <= startPoint || i >= endPoint + 1) {
-                int index = i;
-                while (offspring2.contains(parent2.getChromosome().get(index)))
-                    index = offspring2.indexOf(parent2.getChromosome().get(index));
-                offspring2.set(i, parent2.getChromosome().get(index));
-            }
-        }
-        ArrayList<Individual> offspringArray = new ArrayList<>();
-        offspringArray.add(new Individual(offspring1));
-        offspringArray.add(new Individual(offspring2));
-        //System.out.println(", Offspring1 = " + offspring1 + ", Offspring2 = " + offspring2);
-        return offspringArray;
+        System.out.println(", Offspring : " + offspring);
+        return new Individual(offspring);
     }
 
-    ArrayList<Individual> crossoverAll (ArrayList<Individual> selected, int[][] distance) {
-        ArrayList<Individual> result = new ArrayList<>();
-        for (int i = 0; i < selected.size() - 1; i++) {
-            for (int j = i + 1; j < selected.size(); j++) {
-                ArrayList<Individual> temp = crossover(selected.get(i), selected.get(j));
-                result.addAll(temp);
-            }
+    void createNewPopulation (int[][] distance) {
+        ArrayList<Individual> newIndividuals = new ArrayList<>();
+        int reproductionSize = (int)((crossoverRate/100) * populationSize);
+        System.out.println("Cross Table");
+        for (int i = 0; i < reproductionSize; i++) {
+            Individual individual = crossover(rouletteWheelSelection(), rouletteWheelSelection());
+            individual.calculateFitness(distance);
+            newIndividuals.add(individual);
         }
-        for (Individual individual : result) individual.calculateFitness(distance);
-        Collections.sort(result);
-        return result;
-    }
-
-    void createNewPopulation (ArrayList<Individual> result) {
-        ArrayList<Individual> newIndividuals = population.getIndividuals();
-        ArrayList<Individual> keep = new ArrayList<>();
-        Collections.sort(newIndividuals);
-        for (int i = 0; i < elitism; i++) keep.add(newIndividuals.get(i));
-        newIndividuals = new ArrayList<>(keep);
+        System.out.println();
+        Collections.sort(population.getIndividuals());
         for (int i = 0; newIndividuals.size() < populationSize; i++)
-            newIndividuals.add(result.get(i));
-        generation++;
+            newIndividuals.add(population.getIndividuals().get(i));
         population.setIndividuals(newIndividuals);
+        generation++;
         population.calculateFitnessRatioEachIndividual();
     }
 }

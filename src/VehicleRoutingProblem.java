@@ -15,7 +15,7 @@ public class VehicleRoutingProblem {
                 {16,42,88,18,162,64,64,116,0,74},
                 {21,62,58,92,132,34,69,106,74,0},
         };
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 90, 0, 1);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 80);
         geneticAlgorithm.initialPopulation(distance);
         System.out.println("Initial Population");
         for (Individual individual : geneticAlgorithm.getPopulation().getIndividuals())
@@ -24,7 +24,7 @@ public class VehicleRoutingProblem {
         do {
             System.out.println("Generation = " + geneticAlgorithm.getGeneration());
             geneticAlgorithm.evaluation(distance);
-            geneticAlgorithm.createNewPopulation(geneticAlgorithm.crossoverAll(geneticAlgorithm.reproduction(), distance));
+            geneticAlgorithm.createNewPopulation(distance);
             Collections.sort(geneticAlgorithm.getPopulation().getIndividuals());
             for (Individual individual : geneticAlgorithm.getPopulation().getIndividuals())
                 System.out.println("Path : " + individual.getChromosome() + ", Distance : "

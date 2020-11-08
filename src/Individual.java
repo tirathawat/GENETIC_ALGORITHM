@@ -14,28 +14,12 @@ class Individual implements Comparable<Individual> {
         return chromosome;
     }
 
-    public void setChromosome(ArrayList<Integer> chromosome) {
-        this.chromosome = chromosome;
-    }
-
     int getFitness() {
         return fitness;
     }
 
-    public void setFitness(int fitness) {
-        this.fitness = fitness;
-    }
-
-    public double getFitnessRatio() {
+    double getFitnessRatio() {
         return fitnessRatio;
-    }
-
-    public void setFitnessRatio(double fitnessRatio) {
-        this.fitnessRatio = fitnessRatio;
-    }
-
-    int getSize() {
-        return chromosome.size();
     }
 
     void calculateFitnessRatio(int totalFitness) {
