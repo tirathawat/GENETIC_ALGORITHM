@@ -1,8 +1,14 @@
-import java.util.Collections;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class VehicleRoutingProblem {
 
     public static void main (String[] args) {
+        Excel excel = new Excel("Genetic Algorithm");
+        String[] columnData = {"Path", "Distance"};
         int[][] distance = {
                 {0,10,28,23,65,16,16,42,16,21},
                 {10,0,76,72,150,52,52,104,42,62},
@@ -17,24 +23,19 @@ public class VehicleRoutingProblem {
         };
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 0.8, 0.01, 0.4);
         geneticAlgorithm.initialPopulation(distance);
-        System.out.println("Initial Population");
-        for (Individual individual : geneticAlgorithm.getPopulation().getIndividuals())
-            System.out.println(individual.getChromosome() + " " + individual.getFitness());
-        System.out.println();
+        excel.writeRow("Initial Population", 0);
+        excel.writeHeaderRow(columnData);
+        for (Individual individual : geneticAlgorithm.getPopulation().getIndividuals()) {
+            ArrayList<String> data = new ArrayList<>();
+            data.add("" + individual.getChromosome());
+            data.add("" + individual.getFitness());
+            excel.writeRow(data);
+        }
         do {
-            System.out.println("Generation = " + geneticAlgorithm.getGeneration());
             geneticAlgorithm.evaluation(distance);
             geneticAlgorithm.createNewPopulation(distance);
-            Collections.sort(geneticAlgorithm.getPopulation().getIndividuals());
-            for (Individual individual : geneticAlgorithm.getPopulation().getIndividuals())
-                System.out.println("Path : " + individual.getChromosome() + ", Distance : "
-                        + individual.getFitness() + ", Fitness Ratio : "
-                        + individual.getFitnessRatio());
-            System.out.println("The minimum distance is "
-                    + geneticAlgorithm.getPopulation().getIndividuals().get(0).getFitness());
-            System.out.println("The average distance is " + geneticAlgorithm.getAverageFitness());
-            System.out.println();
         } while (geneticAlgorithm.isTerminate());
+        excel.export("test");
     }
 
 }

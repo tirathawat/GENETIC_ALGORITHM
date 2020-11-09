@@ -80,7 +80,6 @@ class GeneticAlgorithm {
     }
 
     private Individual crossover(Individual parent1, Individual parent2) {
-        System.out.print("Parent1 = " + parent1.getChromosome() + ", Parent2 = " + parent2.getChromosome());
         ArrayList<Integer> offspring = new ArrayList<>();
         for (int i = 1; i < 10; i++) offspring.add(null);
         offspring.add(0,1);
@@ -88,7 +87,6 @@ class GeneticAlgorithm {
         Random random = new Random();
         int startPoint = random.nextInt(3) + 1;
         int endPoint = random.nextInt(9 - startPoint) + (startPoint + 1);
-        System.out.print(", startPoint = " + startPoint + ", endPoint = " + endPoint);
         for (int i = startPoint + 1; i <= endPoint; i++) offspring.set(i, parent2.getChromosome().get(i));
         for (int i = 1; i <= 9; i++) {
             if (i <= startPoint || i >= endPoint + 1) {
@@ -98,7 +96,6 @@ class GeneticAlgorithm {
                 offspring.set(i, parent1.getChromosome().get(index));
             }
         }
-        System.out.println(", Offspring : " + offspring);
         return new Individual(offspring);
     }
 
@@ -113,7 +110,6 @@ class GeneticAlgorithm {
     void createNewPopulation(int[][] distance) {
         ArrayList<Individual> newIndividuals = new ArrayList<>();
         int reproductionSize = (int) (crossoverRate * populationSize);
-        System.out.println("Cross Table");
         for (int i = 0; i < reproductionSize; i++) {
             Individual individual = crossover(rouletteWheelSelection(), rouletteWheelSelection());
             individual.calculateFitness(distance);
