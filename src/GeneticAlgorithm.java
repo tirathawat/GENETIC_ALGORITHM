@@ -6,12 +6,16 @@ class GeneticAlgorithm {
 
     private int populationSize;
     private double crossoverRate;
+    private double mutationRate;
+    private double terminateRate;
     private Population population;
     private int generation;
 
-    GeneticAlgorithm (int populationSize, double crossoverRate) {
+    GeneticAlgorithm (int populationSize, double crossoverRate, double mutationRate, double terminateRate) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
+        this.mutationRate = mutationRate;
+        this.terminateRate = terminateRate;
         this.generation = 1;
     }
 
@@ -42,8 +46,8 @@ class GeneticAlgorithm {
 
     boolean isTerminate() {
         int modeFrequency = presortMode(population.getIndividuals());
-        double percent = ((double) modeFrequency / populationSize) * 100;
-        return !(percent >= 60);
+        double percent = ((double) modeFrequency / populationSize);
+        return !(percent >= terminateRate);
     }
 
     private int presortMode(ArrayList<Individual> individuals) {
@@ -98,9 +102,17 @@ class GeneticAlgorithm {
         return new Individual(offspring);
     }
 
-    void createNewPopulation (int[][] distance) {
+    private void mutation(int[][] distance) {
+        for (int i = 0; i < populationSize && mutationRate != 0; i++)
+            if (Math.random() < mutationRate) {
+                population.getIndividuals().get(i).generateChromosome();
+                population.getIndividuals().get(i).calculateFitness(distance);
+            }
+    }
+
+    void createNewPopulation(int[][] distance) {
         ArrayList<Individual> newIndividuals = new ArrayList<>();
-        int reproductionSize = (int)((crossoverRate/100) * populationSize);
+        int reproductionSize = (int) (crossoverRate * populationSize);
         System.out.println("Cross Table");
         for (int i = 0; i < reproductionSize; i++) {
             Individual individual = crossover(rouletteWheelSelection(), rouletteWheelSelection());
@@ -112,7 +124,8 @@ class GeneticAlgorithm {
         for (int i = 0; newIndividuals.size() < populationSize; i++)
             newIndividuals.add(population.getIndividuals().get(i));
         population.setIndividuals(newIndividuals);
-        generation++;
+        mutation(distance);
         population.calculateFitnessRatioEachIndividual();
+        generation++;
     }
 }

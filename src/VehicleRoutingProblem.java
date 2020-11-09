@@ -15,7 +15,7 @@ public class VehicleRoutingProblem {
                 {16,42,88,18,162,64,64,116,0,74},
                 {21,62,58,92,132,34,69,106,74,0},
         };
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 80);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 0.8, 0.01, 0.4);
         geneticAlgorithm.initialPopulation(distance);
         System.out.println("Initial Population");
         for (Individual individual : geneticAlgorithm.getPopulation().getIndividuals())
