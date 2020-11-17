@@ -21,11 +21,9 @@ class GeneticAlgorithm {
         this.generation = 1;
     }
 
-    void initialPopulation(int[][] distance) {
+    void initialPopulation() {
         population = new Population(this.populationSize);
         population.generateIndividual();
-        population.calculateFitnessEachIndividual(distance);
-        Collections.sort(population.getIndividuals());
     }
 
     Population getPopulation() {
@@ -69,16 +67,14 @@ class GeneticAlgorithm {
     }
 
     private Individual rouletteWheelSelection() {
-        population.calculateFitnessRatioEachIndividual();
-        while (true) {
-            double partialSum = 0;
-            double roulette;
-            roulette = Math.random();
-            for (Individual individual : population.getIndividuals()) {
-                partialSum += individual.getFitnessRatio();
-                if (partialSum >= roulette) return individual;
-            }
+        double partialSum = 0;
+        double roulette;
+        roulette = Math.random();
+        for (Individual individual : population.getIndividuals()) {
+            partialSum += individual.getFitnessRatio();
+            if (partialSum >= roulette) return individual;
         }
+        return null;
     }
 
     private Individual crossover(Individual parent1, Individual parent2) {
@@ -102,7 +98,7 @@ class GeneticAlgorithm {
     }
 
     private void mutation(int[][] distance) {
-        for (int i = 0; i < populationSize && mutationRate != 0; i++)
+        for (int i = 1; i < populationSize && mutationRate != 0; i++)
             if (Math.random() < mutationRate) {
                 population.getIndividuals().get(i).generateChromosome();
                 population.getIndividuals().get(i).calculateFitness(distance);
@@ -111,8 +107,7 @@ class GeneticAlgorithm {
 
     void createNewPopulation(int[][] distance) {
         ArrayList<Individual> newIndividuals = new ArrayList<>();
-        int reproductionSize = (int) (crossoverRate * populationSize);
-        for (int i = 0; i < reproductionSize; i++) {
+        for (int i = 0; i < crossoverRate * populationSize; i++) {
             Individual individual = crossover(rouletteWheelSelection(), rouletteWheelSelection());
             individual.calculateFitness(distance);
             newIndividuals.add(individual);
@@ -121,6 +116,7 @@ class GeneticAlgorithm {
         for (int i = 0; newIndividuals.size() < populationSize; i++)
             newIndividuals.add(population.getIndividuals().get(i));
         population.setIndividuals(newIndividuals);
+        Collections.sort(population.getIndividuals());
         mutation(distance);
         population.calculateFitnessRatioEachIndividual();
         generation++;

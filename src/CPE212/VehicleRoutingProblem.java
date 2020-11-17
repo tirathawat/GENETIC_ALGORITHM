@@ -21,18 +21,18 @@ public class VehicleRoutingProblem {
         };
         long startTime = System.currentTimeMillis();
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(
-                100,
+                150,
                 0.8,
                 0.03,
                 0.3);
-        geneticAlgorithm.initialPopulation(distance);
+        geneticAlgorithm.initialPopulation();
         do {
+            geneticAlgorithm.evaluation(distance);
             generationData.add(new GenerationData(
                     geneticAlgorithm.getGeneration(),
                     geneticAlgorithm.getPopulation().getIndividuals().get(0).getFitness(),
                     geneticAlgorithm.getPopulation().getIndividuals().get(0).getChromosome(),
                     geneticAlgorithm.getAverageFitness()));
-            geneticAlgorithm.evaluation(distance);
             geneticAlgorithm.createNewPopulation(distance);
         } while (geneticAlgorithm.isTerminate());
         long stopTime = System.currentTimeMillis();
