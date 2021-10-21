@@ -1,6 +1,7 @@
-package CPE212;
+package CPE341;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 class Population {
 
@@ -13,6 +14,7 @@ class Population {
     }
 
     ArrayList<Individual> getIndividuals() {
+        Collections.sort(individuals);
         return individuals;
     }
 
@@ -30,9 +32,10 @@ class Population {
             individual.calculateFitnessRatio(calculateTotalFitness());
     }
 
-    void calculateFitnessEachIndividual(int[][] distance) {
-        for (Individual individual : individuals)
-            individual.calculateFitness(distance);
+    void calculateFitnessEachIndividual() {
+        for (Individual individual : individuals) {
+            individual.calculateFitness();
+        }
     }
 
     int calculateTotalFitness() {

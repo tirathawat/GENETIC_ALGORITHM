@@ -1,7 +1,8 @@
-package CPE212;
+package CPE341;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Random;
+import java.lang.Math;
 
 class Individual implements Comparable<Individual> {
 
@@ -33,20 +34,23 @@ class Individual implements Comparable<Individual> {
         this.fitnessRatio = (double) fitness / totalFitness;
     }
 
-    void calculateFitness(int[][] distance) {
+    void calculateFitness() {
+        int x = 0;
         fitness = 0;
-        for (int i = 0; i < chromosome.size() - 1; i++)
-            fitness += distance[chromosome.get(i) - 1][chromosome.get(i + 1) - 1];
+        for (int i = 0; i < chromosome.size() - 1; i++) {
+            x += chromosome.get(i) * 2^i;
+        }
+        fitness = (int)(Math.pow(x, 3) - (60 * Math.pow(x, 2)) + (900 * x) + 150);
     }
 
     void generateChromosome() {
         ArrayList<Integer> chromosome = new ArrayList<>();
-        for (int i = 1; i < 10; i++) {
-            chromosome.add(i + 1);
+        for (int i = 1; i <= 6; i++) {
+            Random random = new Random();
+            Integer binary =  random.nextInt(2);
+            chromosome.add(binary);
         }
-        Collections.shuffle(chromosome);
-        chromosome.add(0, 1);
-        chromosome.add(1);
+        System.out.println(chromosome);
         this.chromosome = new ArrayList<>(chromosome);
     }
 
