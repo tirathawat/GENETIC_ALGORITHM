@@ -9,10 +9,10 @@ public class CPE341Lab {
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(
-                50,
-                0.8,
-                0.08,
-                0.3);
+                12,
+                0.75,
+                0.2,
+                1);
         geneticAlgorithm.initialPopulation();
         do {
             geneticAlgorithm.evaluation();

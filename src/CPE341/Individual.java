@@ -37,8 +37,8 @@ class Individual implements Comparable<Individual> {
     void calculateFitness() {
         int x = 0;
         fitness = 0;
-        for (int i = 0; i < chromosome.size() - 1; i++) {
-            x += chromosome.get(i) * 2^i;
+        for (int i = chromosome.size() - 1; i >= 0 ; i--) {
+            x += chromosome.get(i) * Math.pow(2,i);
         }
         fitness = (int)(Math.pow(x, 3) - (60 * Math.pow(x, 2)) + (900 * x) + 150);
     }
@@ -56,6 +56,6 @@ class Individual implements Comparable<Individual> {
 
     @Override
     public int compareTo(Individual o) {
-        return Integer.compare(this.getFitness(), o.getFitness());
+        return Integer.compare(o.getFitness(), this.getFitness());
     }
 }

@@ -52,6 +52,11 @@ class GeneticAlgorithm {
 
     private int presortMode(ArrayList<Individual> individuals) {
         Collections.sort(individuals);
+        System.out.println();
+        for (Individual individual : individuals) {
+            System.out.println(individual.getChromosome());
+        }
+        System.out.println();
         int i = 0;
         int modeFrequency = 0;
         int n = individuals.size();
@@ -63,6 +68,7 @@ class GeneticAlgorithm {
             if (runLength > modeFrequency) modeFrequency = runLength;
             i += runLength;
         }
+
         return modeFrequency;
     }
 
@@ -88,16 +94,6 @@ class GeneticAlgorithm {
             else 
                 child.set(i, parent2.getChromosome().get(i));
         }
-
-        System.out.print("parent1: " + parent1.getChromosome().toString());
-        System.out.println();
-        System.out.print("parent2: " + parent2.getChromosome().toString());
-        System.out.println();
-        System.out.print("dividedPoint: " + dividedPoint);
-        System.out.println();
-        System.out.print("child: " + child.toString());
-        System.out.println();
-
         return new Individual(child);
     }
 
