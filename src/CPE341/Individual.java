@@ -10,11 +10,11 @@ class Individual implements Comparable<Individual> {
     private int fitness;
     private double fitnessRatio;
 
-    Individual () {
+    Individual() {
         generateChromosome();
     }
 
-    Individual (ArrayList<Integer> chromosome) {
+    Individual(ArrayList<Integer> chromosome) {
         this.chromosome = chromosome;
     }
 
@@ -37,17 +37,17 @@ class Individual implements Comparable<Individual> {
     void calculateFitness() {
         int x = 0;
         fitness = 0;
-        for (int i = chromosome.size() - 1; i >= 0 ; i--) {
-            x += chromosome.get(i) * Math.pow(2,i);
+        for (int i = chromosome.size() - 1; i >= 0; i--) {
+            x += chromosome.get(i) * Math.pow(2, i);
         }
-        fitness = (int)(Math.pow(x, 3) - (60 * Math.pow(x, 2)) + (900 * x) + 150);
+        fitness = (int) (Math.pow(x, 3) - (60 * Math.pow(x, 2)) + (900 * x) + 150);
     }
 
     void generateChromosome() {
         ArrayList<Integer> chromosome = new ArrayList<>();
         for (int i = 1; i <= 6; i++) {
             Random random = new Random();
-            Integer binary =  random.nextInt(2);
+            Integer binary = random.nextInt(2);
             chromosome.add(binary);
         }
         System.out.println(chromosome);
@@ -56,6 +56,6 @@ class Individual implements Comparable<Individual> {
 
     @Override
     public int compareTo(Individual o) {
-        return Integer.compare(o.getFitness(), this.getFitness());
+        return Integer.compare(this.getFitness(), o.getFitness());
     }
 }

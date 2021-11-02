@@ -4,20 +4,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CPE341Lab {
-    public static void main (String[] args) {
-        
+    public static void main(String[] args) {
+
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(
-                12,
-                0.75,
-                0.2,
-                1);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 0.75, 0.2, 0.4);
         geneticAlgorithm.initialPopulation();
         do {
             geneticAlgorithm.evaluation();
-            generationData.add(new GenerationData(
-                    geneticAlgorithm.getGeneration(),
+            generationData.add(new GenerationData(geneticAlgorithm.getGeneration(),
                     geneticAlgorithm.getPopulation().getIndividuals().get(0).getFitness(),
                     geneticAlgorithm.getPopulation().getIndividuals().get(0).getChromosome(),
                     geneticAlgorithm.getAverageFitness()));
@@ -33,6 +28,4 @@ public class CPE341Lab {
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
     }
 
-
-   
 }
