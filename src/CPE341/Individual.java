@@ -44,13 +44,18 @@ class Individual implements Comparable<Individual> {
     }
 
     void generateChromosome() {
+        int count;
         ArrayList<Integer> chromosome = new ArrayList<>();
-        for (int i = 1; i <= 6; i++) {
-            Random random = new Random();
-            Integer binary = random.nextInt(2);
-            chromosome.add(binary);
-        }
-        System.out.println(chromosome);
+        do {
+            count = 0;
+            chromosome.clear();
+            for (int i = 1; i <= 6; i++) {
+                Random random = new Random();
+                Integer binary = random.nextInt(2);
+                count += binary;
+                chromosome.add(binary);
+            }
+        } while (count == 0);
         this.chromosome = new ArrayList<>(chromosome);
     }
 

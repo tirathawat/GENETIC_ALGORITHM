@@ -13,7 +13,7 @@ class GeneticAlgorithm {
     private Population population;
     private int generation;
 
-    GeneticAlgorithm (int populationSize, double crossoverRate, double mutationRate, double terminateRate) {
+    GeneticAlgorithm(int populationSize, double crossoverRate, double mutationRate, double terminateRate) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
@@ -52,11 +52,6 @@ class GeneticAlgorithm {
 
     private int presortMode(ArrayList<Individual> individuals) {
         Collections.sort(individuals);
-        System.out.println();
-        for (Individual individual : individuals) {
-            System.out.println(individual.getChromosome());
-        }
-        System.out.println();
         int i = 0;
         int modeFrequency = 0;
         int n = individuals.size();
@@ -65,7 +60,8 @@ class GeneticAlgorithm {
             ArrayList<Integer> runValue = individuals.get(i).getChromosome();
             while (i + runLength <= n - 1 && individuals.get(i + runLength).getChromosome().equals(runValue))
                 runLength++;
-            if (runLength > modeFrequency) modeFrequency = runLength;
+            if (runLength > modeFrequency)
+                modeFrequency = runLength;
             i += runLength;
         }
 
@@ -78,20 +74,22 @@ class GeneticAlgorithm {
         roulette = Math.random();
         for (Individual individual : population.getIndividuals()) {
             partialSum += individual.getFitnessRatio();
-            if (partialSum >= roulette) return individual;
+            if (partialSum >= roulette)
+                return individual;
         }
         return null;
     }
 
     private Individual crossover(Individual parent1, Individual parent2) {
         ArrayList<Integer> child = new ArrayList<>();
-        for (int i = 0; i <= 5; i++) child.add(null);
+        for (int i = 0; i <= 5; i++)
+            child.add(null);
         Random random = new Random();
         int dividedPoint = random.nextInt(5) + 1;
         for (int i = 0; i <= 5; i++) {
             if (i < dividedPoint)
                 child.set(i, parent1.getChromosome().get(i));
-            else 
+            else
                 child.set(i, parent2.getChromosome().get(i));
         }
         return new Individual(child);

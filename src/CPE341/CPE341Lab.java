@@ -8,7 +8,7 @@ public class CPE341Lab {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100, 0.75, 0.2, 0.4);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(15, 0.75, 0.2, 0.75);
         geneticAlgorithm.initialPopulation();
         do {
             geneticAlgorithm.evaluation();
@@ -22,7 +22,7 @@ public class CPE341Lab {
         for (GenerationData g : generationData) {
             System.out.print("Gen : " + g.getGeneration() + ", ");
             System.out.print("Best fitness: " + g.getFitness() + ", ");
-            System.out.print("chromosome : " + Arrays.toString(g.getChromosome().toArray()) + ", ");
+            System.out.print("Best chromosome : " + Arrays.toString(g.getChromosome().toArray()) + ", ");
             System.out.print("Average fitness : " + g.getAverage() + "\n");
         }
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
