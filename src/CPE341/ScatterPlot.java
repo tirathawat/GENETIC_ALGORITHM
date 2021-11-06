@@ -13,21 +13,33 @@ import java.awt.*;
 import java.util.ArrayList;
 
 class ScatterPlot extends JFrame {
-    ScatterPlot(String title, String chartName, ArrayList<GenerationData> generationData) {
+
+    ScatterPlot(String title) {
         super(title);
-        XYDataset dataSet = createDataSet(generationData);
-        JFreeChart chart = ChartFactory.createScatterPlot(chartName, "Generation", "Best distance", dataSet);
+    }
+
+    public void setup(XYDataset dataSet,String chartName,String xName,String yName) {
+        JFreeChart chart = ChartFactory.createScatterPlot(chartName, xName, yName, dataSet);
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setBackgroundPaint(new Color(255, 228, 196));
         ChartPanel panel = new ChartPanel(chart);
         setContentPane(panel);
     }
-
-    private XYDataset createDataSet(ArrayList<GenerationData> generationData) {
+    
+    public XYDataset createBestDataSet(ArrayList<GenerationData> generationData) {
         XYSeriesCollection dataSet = new XYSeriesCollection();
         XYSeries series = new XYSeries("path", false, false);
         for (GenerationData g : generationData)
             series.add(g.getGeneration(), g.getFitness());
+        dataSet.addSeries(series);
+        return dataSet;
+    }
+
+    public XYDataset createAvgDataSet(ArrayList<GenerationData> generationData) {
+        XYSeriesCollection dataSet = new XYSeriesCollection();
+        XYSeries series = new XYSeries("path", false, false);
+        for (GenerationData g : generationData)
+            series.add(g.getGeneration(), g.getAverage());
         dataSet.addSeries(series);
         return dataSet;
     }
