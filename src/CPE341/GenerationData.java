@@ -8,7 +8,7 @@ class GenerationData {
     private double averageFitness;
     private int generation;
 
-    GenerationData (int generation, int fitness, ArrayList<Integer> chromosome, double averageFitness) {
+    GenerationData(int generation, int fitness, ArrayList<Integer> chromosome, double averageFitness) {
         this.generation = generation;
         this.fitness = fitness;
         this.averageFitness = averageFitness;
@@ -30,4 +30,5 @@ class GenerationData {
     int getGeneration() {
         return generation;
     }
+
 }
