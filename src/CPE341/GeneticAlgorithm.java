@@ -1,5 +1,3 @@
-package CPE341;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -117,6 +115,7 @@ class GeneticAlgorithm {
                 population.getIndividuals().get(i).printChromosome();
                 Individual individual = new Individual();
                 individual.calculateFitness();
+                population.setIndividual(i, individual);
                 System.out.println("    To: ");
                 System.out.print("  ");
                 population.getIndividuals().get(i).printChromosome();

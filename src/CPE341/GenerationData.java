@@ -1,5 +1,3 @@
-package CPE341;
-
 import java.util.ArrayList;
 
 class GenerationData {
