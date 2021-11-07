@@ -2,7 +2,6 @@ package CPE341;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 class GeneticAlgorithm {
 
@@ -47,7 +46,7 @@ class GeneticAlgorithm {
     boolean isTerminate() {
         int modeFrequency = presortMode(population.getIndividuals());
         double percent = ((double) modeFrequency / populationSize);
-        return !(percent >= terminateRate);
+        return percent >= terminateRate;
     }
 
     private int presortMode(ArrayList<Individual> individuals) {
@@ -57,8 +56,8 @@ class GeneticAlgorithm {
         int n = individuals.size();
         while (i <= n - 1) {
             int runLength = 1;
-            ArrayList<Integer> runValue = individuals.get(i).getChromosome();
-            while (i + runLength <= n - 1 && individuals.get(i + runLength).getChromosome().equals(runValue))
+            int runValue = individuals.get(i).getDecimal();
+            while (i + runLength <= n - 1 && individuals.get(i + runLength).getDecimal() == runValue)
                 runLength++;
             if (runLength > modeFrequency)
                 modeFrequency = runLength;
@@ -74,49 +73,104 @@ class GeneticAlgorithm {
         roulette = Math.random();
         for (Individual individual : population.getIndividuals()) {
             partialSum += individual.getFitnessRatio();
-            if (partialSum >= roulette)
+            if (partialSum >= roulette) {
                 return individual;
+            }
         }
         return null;
     }
 
     private Individual crossover(Individual parent1, Individual parent2) {
-        ArrayList<Integer> child = new ArrayList<>();
-        for (int i = 0; i <= 5; i++)
-            child.add(null);
-        Random random = new Random();
-        int dividedPoint = random.nextInt(5) + 1;
+        ArrayList<Integer> child1 = new ArrayList<>();
+        ArrayList<Integer> child2 = new ArrayList<>();
+
         for (int i = 0; i <= 5; i++) {
-            if (i < dividedPoint)
-                child.set(i, parent1.getChromosome().get(i));
-            else
-                child.set(i, parent2.getChromosome().get(i));
+            child1.add(null);
+            child2.add(null);
         }
-        return new Individual(child);
+        int min = 0;
+        int max = 6;
+        int dividedPoint = min + (int) (Math.random() * ((max - min) + 1));
+        System.out.println("divided point: " + dividedPoint);
+        for (int i = 0; i < 6; i++) {
+            if (i < dividedPoint) {
+                child1.set(i, parent1.getChromosome().get(i));
+                child2.set(i, parent2.getChromosome().get(i));
+            } else {
+                child1.set(i, parent2.getChromosome().get(i));
+                child2.set(i, parent1.getChromosome().get(i));
+            }
+        }
+        if (Math.random() < 0.5) {
+            return new Individual(child1);
+        } else {
+            return new Individual(child2);
+        }
     }
 
     private void mutation() {
-        for (int i = 1; i < populationSize && mutationRate != 0; i++)
+        for (int i = 0; i < populationSize && mutationRate != 0; i++) {
             if (Math.random() < mutationRate) {
-                population.getIndividuals().get(i).generateChromosome();
-                population.getIndividuals().get(i).calculateFitness();
+                System.out.println("+++++mutation+++++");
+                System.out.println("    individuals mutation");
+                System.out.print("  ");
+                population.getIndividuals().get(i).printChromosome();
+                Individual individual = new Individual();
+                individual.calculateFitness();
+                System.out.println("    To: ");
+                System.out.print("  ");
+                population.getIndividuals().get(i).printChromosome();
+                System.out.println("++++++++++");
             }
+        }
+
     }
 
     void createNewPopulation() {
         ArrayList<Individual> newIndividuals = new ArrayList<>();
-        for (int i = 0; i < crossoverRate * populationSize; i++) {
-            Individual individual = crossover(rouletteWheelSelection(), rouletteWheelSelection());
-            individual.calculateFitness();
+        Collections.sort(population.getIndividuals());
+
+        System.out.println("+++++elitism+++++");
+
+        for (int i = 0; i < populationSize - (int) (crossoverRate * populationSize); i++) {
+            Individual individual = population.getIndividuals().get(i);
+            individual.printChromosome();
             newIndividuals.add(individual);
         }
-        Collections.sort(population.getIndividuals());
-        for (int i = 0; newIndividuals.size() < populationSize; i++)
-            newIndividuals.add(population.getIndividuals().get(i));
+
+        System.out.println("++++++++++");
+
+        while (newIndividuals.size() < populationSize) {
+            Individual child;
+            System.out.println("+++++cross over+++++");
+            Individual parent1 = rouletteWheelSelection();
+            Individual parent2 = rouletteWheelSelection();
+            System.out.print("parent1: ");
+            parent1.printChromosome();
+            System.out.print("parent2: ");
+            parent2.printChromosome();
+            do {
+                child = crossover(parent1, parent2);
+            } while (child.getDecimal() < 1 || child.getDecimal() > 64);
+            child.calculateFitness();
+            System.out.print("child: ");
+            child.printChromosome();
+            newIndividuals.add(child);
+            System.out.println("++++++++++");
+        }
+
         population.setIndividuals(newIndividuals);
         Collections.sort(population.getIndividuals());
         mutation();
         population.calculateFitnessRatioEachIndividual();
         generation++;
+    }
+
+    void printPopulation() {
+        System.out.println("++++++++ Generation " + generation + " ++++++++");
+        for (Individual individual : population.getIndividuals()) {
+            individual.printChromosome();
+        }
+        System.out.println("++++++++++++++++");
     }
 }
