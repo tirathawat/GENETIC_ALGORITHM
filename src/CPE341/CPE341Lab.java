@@ -42,6 +42,7 @@ public class CPE341Lab {
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
         showBestGraph(generationData);
         showAvgGraph(generationData);
+        BruteForce();
     }
 
     private static void showBestGraph(ArrayList<GenerationData> generationData) {
@@ -62,5 +63,23 @@ public class CPE341Lab {
         plot.setLocationRelativeTo(null);
         plot.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         plot.setVisible(true);
+    }
+    private static void BruteForce () {
+        long startTime = System.currentTimeMillis();
+        int i = 1 ;
+        int minValue = 0;
+        int minFitness = Integer.MAX_VALUE;
+        while ( i <= 64 ) {
+            int fitness = (int) (Math.pow(i, 3) - (60 * Math.pow(i, 2)) + (900 * i) + 150);
+            if (minFitness > fitness) {
+                minFitness = fitness;
+                minValue = i;
+            }
+            i++;
+        }
+        long stopTime = System.currentTimeMillis();
+        System.out.println("/// Brute Force ///");
+        System.out.println("Best answer : " + minValue + " ("+ minFitness +")");
+        System.out.println("Running Time : " + (stopTime - startTime) + " ms");
     }
 }
