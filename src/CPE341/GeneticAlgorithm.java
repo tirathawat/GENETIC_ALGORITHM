@@ -81,31 +81,23 @@ class GeneticAlgorithm {
     }
 
     private Individual crossover(Individual parent1, Individual parent2) {
-        ArrayList<Integer> child1 = new ArrayList<>();
-        ArrayList<Integer> child2 = new ArrayList<>();
+        ArrayList<Integer> child = new ArrayList<>();
 
         for (int i = 0; i <= 5; i++) {
-            child1.add(null);
-            child2.add(null);
+            child.add(null);
         }
-        int min = 0;
-        int max = 6;
+        int min = 1;
+        int max = 5;
         int dividedPoint = min + (int) (Math.random() * ((max - min) + 1));
         System.out.println("divided point: " + dividedPoint);
         for (int i = 0; i < 6; i++) {
             if (i < dividedPoint) {
-                child1.set(i, parent1.getChromosome().get(i));
-                child2.set(i, parent2.getChromosome().get(i));
+                child.set(i, parent1.getChromosome().get(i));
             } else {
-                child1.set(i, parent2.getChromosome().get(i));
-                child2.set(i, parent1.getChromosome().get(i));
+                child.set(i, parent2.getChromosome().get(i));
             }
         }
-        if (Math.random() < 0.5) {
-            return new Individual(child1);
-        } else {
-            return new Individual(child2);
-        }
+        return new Individual(child);
     }
 
     private void mutation() {

@@ -12,7 +12,7 @@ public class CPE341Lab {
         Boolean stop;
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(13, 0.9, 0.01, 1);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(14, 0.9, 0.01, 1);
         geneticAlgorithm.initialPopulation();
         do {
             geneticAlgorithm.evaluation();
