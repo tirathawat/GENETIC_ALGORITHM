@@ -17,7 +17,7 @@ class Individual implements Comparable<Individual> {
 
     Individual(ArrayList<Integer> chromosome) {
         this.chromosome = chromosome;
-        this.decimal = toDecimal(chromosome);
+        this.decimal = toDecimal(chromosome) + 1;
     }
 
     ArrayList<Integer> getChromosome() {
@@ -59,11 +59,10 @@ class Individual implements Comparable<Individual> {
             binaryString += gene.toString();
         }
         int decimal = Integer.parseInt(binaryString, 2);
-        return decimal + 1;
+        return decimal;
     }
 
     ArrayList<Integer> toBinary(int decimal) {
-        decimal = decimal - 1;
         ArrayList<Integer> result = new ArrayList<>();
         String binary = Integer.toBinaryString(decimal);
         for (int i = binary.length(); i < 6; i++) {
@@ -79,7 +78,8 @@ class Individual implements Comparable<Individual> {
         int min = 1;
         int max = 64;
         this.decimal = min + (int) (Math.random() * ((max - min) + 1));
-        this.chromosome = new ArrayList<Integer>(toBinary(this.decimal));
+        this.decimal = this.decimal - 1;
+        this.chromosome = toBinary(this.decimal);
     }
 
     public void printChromosome() {
