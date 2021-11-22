@@ -7,11 +7,11 @@ public class VehicleRoutingProblem {
 
     public static void main(String[] args) {
         Preparator preparator = new Preparator();
-        ArrayList<String> distance = preparator.readFile("src/CPE212/resources/distance.txt");
-        ArrayList<String> travelDuration = preparator.readFile("src/CPE212/resources/travel_duration.txt");
-        ArrayList<String> nodeDuration = preparator.readFile("src/CPE212/resources/node_duration.txt");
-        ArrayList<String> nodeName = preparator.readFile("src/CPE212/resources/node_name.txt");
-        preparator.prepareData(distance, travelDuration, nodeDuration, nodeName, "  ");
+        ArrayList<String> distance = preparator.readFile("distance.txt");
+        ArrayList<String> travelDuration = preparator.readFile("travel_duration.txt");
+        ArrayList<String> nodeDuration = preparator.readFile("node_duration.txt");
+        ArrayList<String> nodeName = preparator.readFile("node_name.txt");
+        preparator.prepareData(distance, travelDuration, nodeDuration, nodeName, "	");
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
