@@ -1,4 +1,4 @@
-package CPE212;
+package CPE341;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ class Population {
     private int populationSize;
     private ArrayList<Individual> individuals;
 
-    Population (int populationSize) {
+    Population(int populationSize) {
         this.populationSize = populationSize;
         this.individuals = new ArrayList<>();
     }

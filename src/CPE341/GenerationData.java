@@ -1,4 +1,4 @@
-package CPE212;
+package CPE341;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ class GenerationData {
     private double averageDistance;
     private int generation;
 
-    GenerationData (int generation, int bestDistance, ArrayList<Integer> path, double averageDistance) {
+    GenerationData(int generation, int bestDistance, ArrayList<Integer> path, double averageDistance) {
         this.generation = generation;
         this.bestDistance = bestDistance;
         this.averageDistance = averageDistance;

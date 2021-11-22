@@ -1,4 +1,4 @@
-package CPE212;
+package CPE341;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +9,11 @@ class Individual implements Comparable<Individual> {
     private int fitness;
     private double fitnessRatio;
 
-    Individual () {
+    Individual() {
         generateChromosome();
     }
 
-    Individual (ArrayList<Integer> chromosome) {
+    Individual(ArrayList<Integer> chromosome) {
         this.chromosome = chromosome;
     }
 

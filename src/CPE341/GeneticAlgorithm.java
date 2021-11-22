@@ -1,4 +1,4 @@
-package CPE212;
+package CPE341;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ class GeneticAlgorithm {
     private Population population;
     private int generation;
 
-    GeneticAlgorithm (int populationSize, double crossoverRate, double mutationRate, double terminateRate) {
+    GeneticAlgorithm(int populationSize, double crossoverRate, double mutationRate, double terminateRate) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
@@ -60,7 +60,8 @@ class GeneticAlgorithm {
             ArrayList<Integer> runValue = individuals.get(i).getChromosome();
             while (i + runLength <= n - 1 && individuals.get(i + runLength).getChromosome().equals(runValue))
                 runLength++;
-            if (runLength > modeFrequency) modeFrequency = runLength;
+            if (runLength > modeFrequency)
+                modeFrequency = runLength;
             i += runLength;
         }
         return modeFrequency;
@@ -72,20 +73,23 @@ class GeneticAlgorithm {
         roulette = Math.random();
         for (Individual individual : population.getIndividuals()) {
             partialSum += individual.getFitnessRatio();
-            if (partialSum >= roulette) return individual;
+            if (partialSum >= roulette)
+                return individual;
         }
         return null;
     }
 
     private Individual crossover(Individual parent1, Individual parent2) {
         ArrayList<Integer> offspring = new ArrayList<>();
-        for (int i = 1; i < 10; i++) offspring.add(null);
-        offspring.add(0,1);
+        for (int i = 1; i < 10; i++)
+            offspring.add(null);
+        offspring.add(0, 1);
         offspring.add(1);
         Random random = new Random();
         int startPoint = random.nextInt(3) + 1;
         int endPoint = random.nextInt(9 - startPoint) + (startPoint + 1);
-        for (int i = startPoint + 1; i <= endPoint; i++) offspring.set(i, parent2.getChromosome().get(i));
+        for (int i = startPoint + 1; i <= endPoint; i++)
+            offspring.set(i, parent2.getChromosome().get(i));
         for (int i = 1; i <= 9; i++) {
             if (i <= startPoint || i >= endPoint + 1) {
                 int index = i;
