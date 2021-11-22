@@ -26,17 +26,33 @@ class Population {
     }
 
     void calculateFitnessRatioEachIndividual() {
+        double totalFitness = calculateTotalFitness();
+        calculateInverseFitnessEachIndividual(totalFitness);
+        double inverseTotalFitness = calculateInverseTotalFitness();
         for (Individual individual : individuals)
-            individual.calculateFitnessRatio(calculateTotalFitness());
+            individual.calculateFitnessRatio(inverseTotalFitness);
     }
 
-    void calculateFitnessEachIndividual(int[][] distance) {
+    double calculateInverseTotalFitness() {
+        double inverseTotalFitness = 0;
         for (Individual individual : individuals)
-            individual.calculateFitness(distance);
+            inverseTotalFitness += individual.getInverseFitness();
+        return inverseTotalFitness;
     }
 
-    int calculateTotalFitness() {
-        int totalFitness = 0;
+    void calculateInverseFitnessEachIndividual(double totalFitness) {
+        for (Individual individual : individuals) {
+            individual.calculateInverseFitness(totalFitness);
+        }
+    }
+
+    void calculateFitnessEachIndividual(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
+        for (Individual individual : individuals)
+            individual.calculateFitness(distance, travelDuration, nodeDuration);
+    }
+
+    double calculateTotalFitness() {
+        double totalFitness = 0;
         for (Individual individual : individuals)
             totalFitness += individual.getFitness();
         return totalFitness;

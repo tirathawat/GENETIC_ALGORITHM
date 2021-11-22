@@ -15,22 +15,32 @@ public class VehicleRoutingProblem {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(150, 0.8, 0.03, 0.3);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(5000, 0.7, 0.05, .75);
         geneticAlgorithm.initialPopulation();
+
+        Boolean stop;
         do {
-            geneticAlgorithm.evaluation(preparator.getDistance());
+            geneticAlgorithm.evaluation(preparator.getDistance(), preparator.getTravelDuration(),
+                    preparator.getNodeDuration());
+
             generationData.add(new GenerationData(geneticAlgorithm.getGeneration(),
-                    geneticAlgorithm.getPopulation().getIndividuals().get(0).getFitness(),
-                    geneticAlgorithm.getPopulation().getIndividuals().get(0).getChromosome(),
-                    geneticAlgorithm.getAverageFitness()));
-            geneticAlgorithm.createNewPopulation(preparator.getDistance());
-        } while (geneticAlgorithm.isTerminate());
+                    geneticAlgorithm.getPopulation().getIndividuals().get(0), geneticAlgorithm.getAverageFitness()));
+
+            stop = geneticAlgorithm.isTerminate();
+            if (!stop) {
+                geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
+                        preparator.getNodeDuration());
+            }
+        } while (!stop);
         long stopTime = System.currentTimeMillis();
         for (GenerationData g : generationData) {
             System.out.print("Gen : " + g.getGeneration() + ", ");
-            System.out.print("Best distance: " + g.getBestDistance() + ", ");
-            System.out.print("Path : " + Arrays.toString(g.getPath().toArray()) + ", ");
-            System.out.print("Average distance : " + g.getAverageDistance() + "\n");
+            System.out.print("Best distance: " + g.getIndividual().getFitness() / 1000 + "km, ");
+            System.out.print("Path : " + Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
+            // System.out.print("Days : " +
+            // Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
+            // + g.getIndividual().getDays().size() + " days), ");
+            System.out.print("Average distance : " + g.getAverageDistance() / 1000 + " km\n");
         }
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
     }

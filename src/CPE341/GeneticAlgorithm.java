@@ -35,11 +35,11 @@ class GeneticAlgorithm {
     }
 
     double getAverageFitness() {
-        return (double) population.calculateTotalFitness() / populationSize;
+        return population.calculateTotalFitness() / populationSize;
     }
 
-    void evaluation(int[][] distance) {
-        population.calculateFitnessEachIndividual(distance);
+    void evaluation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
+        population.calculateFitnessEachIndividual(distance, travelDuration, nodeDuration);
         population.calculateFitnessRatioEachIndividual();
         Collections.sort(population.getIndividuals());
     }
@@ -47,7 +47,7 @@ class GeneticAlgorithm {
     boolean isTerminate() {
         int modeFrequency = presortMode(population.getIndividuals());
         double percent = ((double) modeFrequency / populationSize);
-        return !(percent >= terminateRate);
+        return percent >= terminateRate;
     }
 
     private int presortMode(ArrayList<Individual> individuals) {
@@ -81,16 +81,14 @@ class GeneticAlgorithm {
 
     private Individual crossover(Individual parent1, Individual parent2) {
         ArrayList<Integer> offspring = new ArrayList<>();
-        for (int i = 1; i < 10; i++)
+        for (int i = 1; i < 21; i++)
             offspring.add(null);
-        offspring.add(0, 1);
-        offspring.add(1);
         Random random = new Random();
-        int startPoint = random.nextInt(3) + 1;
-        int endPoint = random.nextInt(9 - startPoint) + (startPoint + 1);
+        int startPoint = random.nextInt(10) + 1;
+        int endPoint = random.nextInt(19 - startPoint) + (startPoint + 1);
         for (int i = startPoint + 1; i <= endPoint; i++)
             offspring.set(i, parent2.getChromosome().get(i));
-        for (int i = 1; i <= 9; i++) {
+        for (int i = 0; i < 20; i++) {
             if (i <= startPoint || i >= endPoint + 1) {
                 int index = i;
                 while (offspring.contains(parent1.getChromosome().get(index)))
@@ -101,27 +99,31 @@ class GeneticAlgorithm {
         return new Individual(offspring);
     }
 
-    private void mutation(int[][] distance) {
+    private void mutation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
         for (int i = 1; i < populationSize && mutationRate != 0; i++)
             if (Math.random() < mutationRate) {
                 population.getIndividuals().get(i).generateChromosome();
-                population.getIndividuals().get(i).calculateFitness(distance);
+                population.getIndividuals().get(i).calculateFitness(distance, travelDuration, nodeDuration);
             }
     }
 
-    void createNewPopulation(int[][] distance) {
+    void createNewPopulation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
+        int index = (int) (Math.random() * (population.getIndividuals().size() - 1 - 0 + 1) + 0);
         ArrayList<Individual> newIndividuals = new ArrayList<>();
         for (int i = 0; i < crossoverRate * populationSize; i++) {
-            Individual individual = crossover(rouletteWheelSelection(), rouletteWheelSelection());
-            individual.calculateFitness(distance);
+            Individual individual = crossover(rouletteWheelSelection(), population.getIndividuals().get(index));
+            individual.calculateFitness(distance, travelDuration, nodeDuration);
             newIndividuals.add(individual);
         }
         Collections.sort(population.getIndividuals());
+
         for (int i = 0; newIndividuals.size() < populationSize; i++)
             newIndividuals.add(population.getIndividuals().get(i));
         population.setIndividuals(newIndividuals);
         Collections.sort(population.getIndividuals());
-        mutation(distance);
+
+        mutation(distance, travelDuration, nodeDuration);
+
         population.calculateFitnessRatioEachIndividual();
         generation++;
     }
