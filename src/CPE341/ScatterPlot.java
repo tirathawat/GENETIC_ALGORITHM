@@ -24,6 +24,10 @@ class ScatterPlot extends JFrame {
         plot.setBackgroundPaint(new Color(255, 228, 196));
         ChartPanel panel = new ChartPanel(chart);
         setContentPane(panel);
+        setSize(800, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
     public XYDataset createDataSet(String seriesName, ArrayList<Double> x, ArrayList<Double> y) {
