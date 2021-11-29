@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import org.jfree.data.xy.XYDataset;
+
 class GeneticAlgorithm {
 
     private int populationSize;
@@ -152,6 +154,12 @@ class GeneticAlgorithm {
         generation++;
     }
 
+    ArrayList<Individual> selectParentByRank (ArrayList<Individual> parent) {
+        int pivot = 0;
+        ArrayList<Individual> child = new ArrayList<>();
+        return child;
+    }
+
     void fastNonDominatedSort ( ArrayList<Individual> individuals) {
         // Population populace = population;
         for (Individual individual : individuals) {
@@ -197,6 +205,15 @@ class GeneticAlgorithm {
                 }
             }
         }
+        ArrayList<Double> x = new ArrayList<>();
+        ArrayList<Double> y = new ArrayList<>();
+        for (Individual i : individuals) {
+            x.add(i.getFitness());
+            y.add(i.getTimeFitness());
+        }
+        ScatterPlot plot = new ScatterPlot("Gan");
+        XYDataset data = plot.createDataSet("Fast Non dominated set", x, y);
+        plot.plot(data, "chartName", "Distance", "Time");
     }
 
 }
