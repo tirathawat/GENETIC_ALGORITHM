@@ -46,7 +46,7 @@ public class CPE341Lab {
     private static void showBestGraph(ArrayList<GenerationData> generationData) {
         ScatterPlot plot = new ScatterPlot("Graph genetic Algorithm");
         XYDataset dataset = plot.createBestDataSet(generationData);
-        plot.setup(dataset, "Generation and Best Fitness Graph", "Generation", "Best Fitness");
+        plot.plot(dataset, "Generation and Best Fitness Graph", "Generation", "Best Fitness");
         plot.setSize(800, 400);
         plot.setLocationRelativeTo(null);
         plot.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -56,7 +56,7 @@ public class CPE341Lab {
     private static void showAvgGraph(ArrayList<GenerationData> generationData) {
         ScatterPlot plot = new ScatterPlot("Graph genetic Algorithm");
         XYDataset dataset = plot.createAvgDataSet(generationData);
-        plot.setup(dataset, "Generation and Avg Fitness Graph", "Generation", "Avg Fitness");
+        plot.plot(dataset, "Generation and Avg Fitness Graph", "Generation", "Avg Fitness");
         plot.setSize(800, 400);
         plot.setLocationRelativeTo(null);
         plot.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
