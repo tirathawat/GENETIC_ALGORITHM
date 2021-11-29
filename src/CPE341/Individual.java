@@ -11,6 +11,14 @@ class Individual implements Comparable<Individual> {
     private double fitness;
     private double inverseFitness;
     private double fitnessRatio;
+    
+    private double timeFitness;
+    private double timeInverseFitness;
+    private double timeFitnessRatio;
+
+    private int rank = 0;
+    private int dominates = 0;
+    private ArrayList<Individual> dominatedIndividual;
 
     Individual(int problemSize) {
         this.path = new ArrayList<Integer>();
@@ -40,12 +48,59 @@ class Individual implements Comparable<Individual> {
         return fitness;
     }
 
+    int getRank() {
+        return rank;
+    }
+
+    void setRank(int newRank) {
+        rank = newRank;
+    }
+
+    int getDominates() {
+        return dominates;
+    }
+
+    int addDominates() {
+        dominates++;
+        return dominates;
+    }
+    int removeDominates() {
+        dominates--;
+        return dominates;
+    }
+
+    ArrayList<Individual> getDominatedIndividual() {
+        return dominatedIndividual;
+    }
+
+    void addDominatedIndividual(Individual target) {
+        dominatedIndividual.add(target);
+    }
+
+    void reset () {
+        rank = -1;
+        dominates = 0;
+        dominatedIndividual = new ArrayList<>();
+    }
+
     double getInverseFitness() {
         return inverseFitness;
     }
 
     double getFitnessRatio() {
         return fitnessRatio;
+    }
+
+    double getTimeFitness() {
+        return timeFitness;
+    }
+
+    double getTimeInverseFitness() {
+        return timeInverseFitness;
+    }
+
+    double getTimeFitnessRatio() {
+        return timeFitnessRatio;
     }
 
     void calculateFitnessRatio(double inverseTotalFitness) {
@@ -60,6 +115,7 @@ class Individual implements Comparable<Individual> {
         int countNode = 1; // count node per day
         int timeLimit = 10;
         int time = 0;
+        int totalTime = 0;
         fitness = 0;
         days.clear();
         path.clear(); // reset path
@@ -67,6 +123,7 @@ class Individual implements Comparable<Individual> {
         path.add(chromosome.get(0));
         for (int i = 0; i < chromosome.size() - 1; i++) {
             time += nodeDuration[chromosome.get(i) - 1];
+            totalTime += nodeDuration[chromosome.get(i) - 1];
             int futureTime = time + nodeDuration[chromosome.get(i + 1) - 1];
             if (futureTime > timeLimit) {
                 days.add(countNode);
@@ -85,6 +142,7 @@ class Individual implements Comparable<Individual> {
         }
         days.add(countNode);
         path.add(1); // back to depot
+        timeFitness = totalTime;
     }
 
     void generateChromosome(int problemSize) {
@@ -108,5 +166,9 @@ class Individual implements Comparable<Individual> {
     @Override
     public int compareTo(Individual o) {
         return Double.compare(this.getFitness(), o.getFitness());
+    }
+
+    public boolean compareDominate (Individual o) {
+        return Double.compare(this.getFitness(), o.getFitness()) > 0 && Double.compare(this.getTimeFitness(), o.getTimeFitness()) > 0;
     }
 }

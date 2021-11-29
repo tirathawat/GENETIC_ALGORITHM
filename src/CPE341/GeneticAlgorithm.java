@@ -102,16 +102,22 @@ class GeneticAlgorithm {
         return new Individual(offspring);
     }
 
-    private void mutation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
-        for (int i = 1; i < populationSize && mutationRate != 0; i++)
-            if (Math.random() < mutationRate) {
-                population.getIndividuals().get(i).generateChromosome(problemSize);
-                population.getIndividuals().get(i).calculateFitness(distance, travelDuration, nodeDuration);
-            }
+    // private void mutation(int[][] distance, int[][] travelDuration, int[] nodeDuration, ArrayList<Individual> individuals) {
+    //     for (int i = 1; i < populationSize && mutationRate != 0; i++)
+    //         if (Math.random() < mutationRate) {
+    //             population.getIndividuals().get(i).generateChromosome(problemSize);
+    //             population.getIndividuals().get(i).calculateFitness(distance, travelDuration, nodeDuration);
+    //         }
+    // }
+
+    private void specificMutation (int[][] distance, int[][] travelDuration, int[] nodeDuration, Individual individual) {
+        individual.generateChromosome(problemSize);
+        individual.calculateFitness(distance, travelDuration, nodeDuration);
     }
 
     void createNewPopulation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
         int index = (int) (Math.random() * (population.getIndividuals().size() - 1 - 0 + 1) + 0);
+        // ArrayList<Individual> newIndividuals = population.getIndividuals();
         ArrayList<Individual> newIndividuals = new ArrayList<>();
         for (int i = 0; i < crossoverRate * populationSize; i++) {
             Individual individual = crossover(rouletteWheelSelection(), population.getIndividuals().get(index));
@@ -120,14 +126,74 @@ class GeneticAlgorithm {
         }
         Collections.sort(population.getIndividuals());
 
-        for (int i = 0; newIndividuals.size() < populationSize; i++)
+        for (int i = 0; newIndividuals.size() < populationSize; i++){
+            specificMutation(distance, travelDuration, nodeDuration, population.getIndividuals().get(i));
             newIndividuals.add(population.getIndividuals().get(i));
+        }
+
+        for (int i = 0; i < populationSize; i++) {
+            newIndividuals.add(population.getIndividuals().get(i));
+        }
+
+        System.out.println();
+        System.out.println(populationSize);
+        System.out.println(newIndividuals.size());
+
         population.setIndividuals(newIndividuals);
         Collections.sort(population.getIndividuals());
 
-        mutation(distance, travelDuration, nodeDuration);
+        fastNonDominatedSort(population);
 
         population.calculateFitnessRatioEachIndividual();
         generation++;
     }
+
+    
+    void fastNonDominatedSort (Population population) {
+        // Population populace = population;
+        for (Individual individual : population.getIndividuals()) {
+            individual.reset();
+        }
+        // Dominates โดนงับ
+        // Dominated ไปงับเขา
+        for (int i = 0; i < population.getIndividuals().size() - 1; i++) {
+            Individual p = population.getIndividuals().get(i);
+            for (int j = i+1; j < population.getIndividuals().size(); j++) {
+                Individual q = population.getIndividuals().get(j);
+                if (p.compareDominate(q)) {
+                    p.addDominates();
+                    q.addDominatedIndividual(p);
+                } else if(q.compareDominate(p)) {
+                    q.addDominates();
+                    p.addDominatedIndividual(q);
+                } 
+            }
+            if (p.getDominates()==0) {
+                p.setRank(1);
+            }
+        }
+        
+        if (population.getIndividuals().get(population.getIndividuals().size()-1).getDominates()==0) {
+            population.getIndividuals().get(population.getIndividuals().size()-1).setRank(1);
+        }
+
+        while (population.populationHasUnsetRank()) {
+            System.out.println("//////////////////");
+            for (int i = 0; i < population.getIndividuals().size(); i++) {
+                Individual ind = population.getIndividuals().get(i);
+                if (ind.getRank()!=-1) {
+                    for (int j = 0; j < ind.getDominatedIndividual().size(); j++) {
+                        Individual dominated = ind.getDominatedIndividual().get(j);
+                        if (dominated.getDominates() > 0) {
+                            int left = dominated.removeDominates();
+                            if (left == 0){
+                                dominated.setRank(ind.getRank()+1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
