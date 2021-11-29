@@ -2,6 +2,7 @@ package CPE341;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class VehicleRoutingProblem {
 
@@ -24,7 +25,7 @@ public class VehicleRoutingProblem {
                     preparator.getNodeDuration());
 
             GenerationData newGen = new GenerationData(geneticAlgorithm.getGeneration(),
-            geneticAlgorithm.getPopulation().getIndividuals().get(0), geneticAlgorithm.getAverageFitness());
+                    geneticAlgorithm.getPopulation().getIndividuals().get(0), geneticAlgorithm.getAverageFitness());
 
             generationData.add(newGen);
 
@@ -47,5 +48,13 @@ public class VehicleRoutingProblem {
             System.out.print("Average distance : " + g.getAverageDistance() / 1000 + " km\n");
         }
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
+
+        ScatterPlot scatterPlot = new ScatterPlot("test");
+        HashMap<Double, Double> data = new HashMap<Double, Double>();
+        data.put(1.0, 5.0);
+        data.put(2.0, 4.0);
+        data.put(3.0, 6.0);
+
+        scatterPlot.plot(scatterPlot.createDataSet("seriesName", data), "chartName", "xName", "yName");
     }
 }

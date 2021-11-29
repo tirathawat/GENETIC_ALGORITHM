@@ -10,7 +10,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 class ScatterPlot extends JFrame {
 
@@ -24,13 +24,17 @@ class ScatterPlot extends JFrame {
         plot.setBackgroundPaint(new Color(255, 228, 196));
         ChartPanel panel = new ChartPanel(chart);
         setContentPane(panel);
+        setSize(800, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
-    public XYDataset createDataSet(String seriesName, ArrayList<Double> x, ArrayList<Double> y) {
+    public XYDataset createDataSet(String seriesName, HashMap<Double, Double> data) {
         XYSeriesCollection dataSet = new XYSeriesCollection();
         XYSeries series = new XYSeries(seriesName, false, false);
-        for (int i = 0; i <= x.size(); i++) {
-            series.add(x.get(i), y.get(i));
+        for (Double k : data.keySet()) {
+            series.add(k, data.get(k));
         }
         dataSet.addSeries(series);
         return dataSet;
