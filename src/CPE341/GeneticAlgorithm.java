@@ -138,28 +138,31 @@ class GeneticAlgorithm {
         System.out.println();
         System.out.println(populationSize);
         System.out.println(newIndividuals.size());
+        fastNonDominatedSort(newIndividuals);
 
         population.setIndividuals(newIndividuals);
+
         Collections.sort(population.getIndividuals());
 
-        fastNonDominatedSort(population);
+        System.out.println(population.getIndividuals().size());
+
+
 
         population.calculateFitnessRatioEachIndividual();
         generation++;
     }
 
-    
-    void fastNonDominatedSort (Population population) {
+    void fastNonDominatedSort ( ArrayList<Individual> individuals) {
         // Population populace = population;
-        for (Individual individual : population.getIndividuals()) {
+        for (Individual individual : individuals) {
             individual.reset();
         }
         // Dominates โดนงับ
         // Dominated ไปงับเขา
-        for (int i = 0; i < population.getIndividuals().size() - 1; i++) {
-            Individual p = population.getIndividuals().get(i);
-            for (int j = i+1; j < population.getIndividuals().size(); j++) {
-                Individual q = population.getIndividuals().get(j);
+        for (int i = 0; i < individuals.size() - 1; i++) {
+            Individual p = individuals.get(i);
+            for (int j = i+1; j < individuals.size(); j++) {
+                Individual q = individuals.get(j);
                 if (p.compareDominate(q)) {
                     p.addDominates();
                     q.addDominatedIndividual(p);
@@ -173,14 +176,14 @@ class GeneticAlgorithm {
             }
         }
         
-        if (population.getIndividuals().get(population.getIndividuals().size()-1).getDominates()==0) {
-            population.getIndividuals().get(population.getIndividuals().size()-1).setRank(1);
+        if (individuals.get(individuals.size()-1).getDominates()==0) {
+            individuals.get(individuals.size()-1).setRank(1);
         }
 
         while (population.populationHasUnsetRank()) {
             System.out.println("//////////////////");
-            for (int i = 0; i < population.getIndividuals().size(); i++) {
-                Individual ind = population.getIndividuals().get(i);
+            for (int i = 0; i < individuals.size(); i++) {
+                Individual ind = individuals.get(i);
                 if (ind.getRank()!=-1) {
                     for (int j = 0; j < ind.getDominatedIndividual().size(); j++) {
                         Individual dominated = ind.getDominatedIndividual().get(j);
