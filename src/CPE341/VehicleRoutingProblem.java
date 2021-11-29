@@ -24,7 +24,7 @@ public class VehicleRoutingProblem {
                     preparator.getNodeDuration());
 
             GenerationData newGen = new GenerationData(geneticAlgorithm.getGeneration(),
-            geneticAlgorithm.getPopulation().getIndividuals().get(0), geneticAlgorithm.getAverageFitness());
+                    geneticAlgorithm.getPopulation().getIndividuals().get(0), geneticAlgorithm.getAverageFitness());
 
             generationData.add(newGen);
 
@@ -45,5 +45,17 @@ public class VehicleRoutingProblem {
             System.out.print("Average distance : " + g.getAverageDistance() / 1000 + " km\n");
         }
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
+
+        ScatterPlot scatterPlot = new ScatterPlot("test");
+        ArrayList<Double> x = new ArrayList<Double>();
+        ArrayList<Double> y = new ArrayList<Double>();
+        x.add(1.0);
+        x.add(2.0);
+        x.add(3.0);
+        y.add(5.0);
+        y.add(4.0);
+        y.add(6.0);
+
+        scatterPlot.plot(scatterPlot.createDataSet("seriesName", x, y), "chartName", "xName", "yName");
     }
 }

@@ -29,7 +29,7 @@ class ScatterPlot extends JFrame {
     public XYDataset createDataSet(String seriesName, ArrayList<Double> x, ArrayList<Double> y) {
         XYSeriesCollection dataSet = new XYSeriesCollection();
         XYSeries series = new XYSeries(seriesName, false, false);
-        for (int i = 0; i <= x.size(); i++) {
+        for (int i = 0; i < x.size(); i++) {
             series.add(x.get(i), y.get(i));
         }
         dataSet.addSeries(series);
