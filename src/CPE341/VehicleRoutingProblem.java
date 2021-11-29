@@ -28,11 +28,13 @@ public class VehicleRoutingProblem {
 
             generationData.add(newGen);
 
-            stop = geneticAlgorithm.isTerminate();
+            // stop = geneticAlgorithm.isTerminate();
+            stop = false;
             if (!stop) {
                 geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
                         preparator.getNodeDuration());
-            }
+            stop = true;
+        }
         } while (!stop);
         long stopTime = System.currentTimeMillis();
         for (GenerationData g : generationData) {
