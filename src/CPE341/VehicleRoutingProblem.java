@@ -2,6 +2,7 @@ package CPE341;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class VehicleRoutingProblem {
 
@@ -47,15 +48,11 @@ public class VehicleRoutingProblem {
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
 
         ScatterPlot scatterPlot = new ScatterPlot("test");
-        ArrayList<Double> x = new ArrayList<Double>();
-        ArrayList<Double> y = new ArrayList<Double>();
-        x.add(1.0);
-        x.add(2.0);
-        x.add(3.0);
-        y.add(5.0);
-        y.add(4.0);
-        y.add(6.0);
+        HashMap<Double, Double> data = new HashMap<Double, Double>();
+        data.put(1.0, 5.0);
+        data.put(2.0, 4.0);
+        data.put(3.0, 6.0);
 
-        scatterPlot.plot(scatterPlot.createDataSet("seriesName", x, y), "chartName", "xName", "yName");
+        scatterPlot.plot(scatterPlot.createDataSet("seriesName", data), "chartName", "xName", "yName");
     }
 }
