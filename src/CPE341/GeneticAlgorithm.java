@@ -12,18 +12,21 @@ class GeneticAlgorithm {
     private double terminateRate;
     private Population population;
     private int generation;
+    private int problemSize;
 
-    GeneticAlgorithm(int populationSize, double crossoverRate, double mutationRate, double terminateRate) {
+    GeneticAlgorithm(int problemSize, int populationSize, double crossoverRate, double mutationRate,
+            double terminateRate) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
         this.terminateRate = terminateRate;
         this.generation = 1;
+        this.problemSize = problemSize;
     }
 
     void initialPopulation() {
         population = new Population(this.populationSize);
-        population.generateIndividual();
+        population.generateIndividual(problemSize);
     }
 
     Population getPopulation() {
@@ -81,14 +84,14 @@ class GeneticAlgorithm {
 
     private Individual crossover(Individual parent1, Individual parent2) {
         ArrayList<Integer> offspring = new ArrayList<>();
-        for (int i = 1; i < 21; i++)
+        for (int i = 1; i < problemSize + 1; i++)
             offspring.add(null);
         Random random = new Random();
-        int startPoint = random.nextInt(10) + 1;
-        int endPoint = random.nextInt(19 - startPoint) + (startPoint + 1);
+        int startPoint = random.nextInt(problemSize / 2) + 1;
+        int endPoint = random.nextInt(problemSize - 1 - startPoint) + (startPoint + 1);
         for (int i = startPoint + 1; i <= endPoint; i++)
             offspring.set(i, parent2.getChromosome().get(i));
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < problemSize; i++) {
             if (i <= startPoint || i >= endPoint + 1) {
                 int index = i;
                 while (offspring.contains(parent1.getChromosome().get(index)))
@@ -102,7 +105,7 @@ class GeneticAlgorithm {
     private void mutation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
         for (int i = 1; i < populationSize && mutationRate != 0; i++)
             if (Math.random() < mutationRate) {
-                population.getIndividuals().get(i).generateChromosome();
+                population.getIndividuals().get(i).generateChromosome(problemSize);
                 population.getIndividuals().get(i).calculateFitness(distance, travelDuration, nodeDuration);
             }
     }

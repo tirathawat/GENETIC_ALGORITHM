@@ -12,10 +12,10 @@ class Individual implements Comparable<Individual> {
     private double inverseFitness;
     private double fitnessRatio;
 
-    Individual() {
+    Individual(int problemSize) {
         this.path = new ArrayList<Integer>();
         this.days = new ArrayList<Integer>();
-        generateChromosome();
+        generateChromosome(problemSize);
     }
 
     Individual(ArrayList<Integer> chromosome) {
@@ -61,6 +61,7 @@ class Individual implements Comparable<Individual> {
         int timeLimit = 10;
         int time = 0;
         fitness = 0;
+        days.clear();
         path.clear(); // reset path
         path.add(1); // add depot node
         path.add(chromosome.get(0));
@@ -86,9 +87,9 @@ class Individual implements Comparable<Individual> {
         path.add(1); // back to depot
     }
 
-    void generateChromosome() {
+    void generateChromosome(int problemSize) {
         ArrayList<Integer> chromosome = new ArrayList<>();
-        for (int i = 1; i < 21; i++) {
+        for (int i = 1; i < problemSize + 1; i++) {
             chromosome.add(i + 1);
         }
         Collections.shuffle(chromosome);

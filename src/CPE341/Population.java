@@ -20,9 +20,9 @@ class Population {
         this.individuals = new ArrayList<>(individuals);
     }
 
-    void generateIndividual() {
+    void generateIndividual(int problemSize) {
         for (int i = 0; i < populationSize; i++)
-            individuals.add(new Individual());
+            individuals.add(new Individual(problemSize));
     }
 
     void calculateFitnessRatioEachIndividual() {

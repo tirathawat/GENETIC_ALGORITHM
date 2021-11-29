@@ -15,7 +15,7 @@ public class VehicleRoutingProblem {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(5000, 0.7, 0.05, .75);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 5000, 0.75, 0.01, .75);
         geneticAlgorithm.initialPopulation();
 
         Boolean stop;
@@ -37,9 +37,9 @@ public class VehicleRoutingProblem {
             System.out.print("Gen : " + g.getGeneration() + ", ");
             System.out.print("Best distance: " + g.getIndividual().getFitness() / 1000 + "km, ");
             System.out.print("Path : " + Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
-            // System.out.print("Days : " +
-            // Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
-            // + g.getIndividual().getDays().size() + " days), ");
+
+            System.out.print("Days : " + Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
+                    + g.getIndividual().getDays().size() + " days), ");
             System.out.print("Average distance : " + g.getAverageDistance() / 1000 + " km\n");
         }
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
