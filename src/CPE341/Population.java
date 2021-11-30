@@ -58,6 +58,13 @@ class Population {
         return totalFitness;
     }
 
+    double calculateTotalTimeFitness() {
+        double totalFitness = 0;
+        for (Individual individual : individuals)
+            totalFitness += individual.getTimeFitness();
+        return totalFitness;
+    }
+
     boolean populationHasUnsetRank () {
         for (Individual individual : individuals) {
             if (individual.getRank()==-1) {

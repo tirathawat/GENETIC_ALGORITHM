@@ -20,6 +20,8 @@ class Individual implements Comparable<Individual> {
     private int dominates = 0;
     private ArrayList<Individual> dominatedIndividual;
 
+    private double crowdingDistance = 0;
+
     Individual(int problemSize) {
         this.path = new ArrayList<Integer>();
         this.days = new ArrayList<Integer>();
@@ -46,6 +48,14 @@ class Individual implements Comparable<Individual> {
 
     double getFitness() {
         return fitness;
+    }
+
+    double getCrowdingDistance() {
+        return crowdingDistance;
+    }
+
+    void setCrowdingDistance(double target) {
+        crowdingDistance = target;
     }
 
     int getRank() {
@@ -81,6 +91,19 @@ class Individual implements Comparable<Individual> {
         rank = -1;
         dominates = 0;
         dominatedIndividual = new ArrayList<>();
+    }
+
+    double getObjectiveVal (int index) {
+        if (index==0) {
+            return fitness;
+        }
+        else if (index==1) {
+            return timeFitness;
+        }
+        else {
+            System.out.println("Something gone wrong..");
+            return 0;
+        }
     }
 
     double getInverseFitness() {
@@ -123,21 +146,26 @@ class Individual implements Comparable<Individual> {
         path.add(chromosome.get(0));
         for (int i = 0; i < chromosome.size() - 1; i++) {
             time += nodeDuration[chromosome.get(i) - 1];
-            totalTime += nodeDuration[chromosome.get(i) - 1];
             int futureTime = time + nodeDuration[chromosome.get(i + 1) - 1];
+            totalTime += nodeDuration[chromosome.get(i + 1) - 1] * 60 * 60;
             if (futureTime > timeLimit) {
                 days.add(countNode);
                 countNode = 0; // reset count
                 time = 0; // reset time
                 path.add(1); // go to depot
                 fitness += distance[chromosome.get(i) - 1][0]; // calculate distance from current node to depot
+                totalTime += travelDuration[chromosome.get(i) - 1][0]; // calculate distance from current node to depot
+                totalTime += nodeDuration[0];
+                // System.out.println(travelDuration[chromosome.get(i) - 1][0]);
                 path.add(chromosome.get(i + 1)); // go to next node
                 countNode++;
                 fitness += distance[0][chromosome.get(i + 1) - 1];// calculate distane from depot to next node
+                totalTime += travelDuration[0][chromosome.get(i + 1) - 1]; 
             } else {
                 countNode++;
                 path.add(chromosome.get(i + 1));
                 fitness += distance[chromosome.get(i) - 1][chromosome.get(i + 1) - 1];
+                totalTime += travelDuration[chromosome.get(i) - 1][chromosome.get(i + 1) - 1];
             }
         }
         days.add(countNode);

@@ -4,11 +4,13 @@ class GenerationData {
 
     private Individual individual;
     private double averageDistance;
+    private double averageTime;
     private int generation;
 
-    GenerationData(int generation, Individual individual, double averageDistance) {
+    GenerationData(int generation, Individual individual, double averageDistance, double averageTime) {
         this.generation = generation;
         this.averageDistance = averageDistance;
+        this.averageTime = averageTime;
         this.individual = individual;
     }
 
@@ -18,6 +20,10 @@ class GenerationData {
 
     double getAverageDistance() {
         return averageDistance;
+    }
+
+    double getAverageTime() {
+        return averageTime;
     }
 
     int getGeneration() {
