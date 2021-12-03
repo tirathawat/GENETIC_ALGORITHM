@@ -16,7 +16,7 @@ public class VehicleRoutingProblem {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 5000, 0.6, 0.3, 0.5);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(20, 2000, 0.6, 0.1, 0.2);
         geneticAlgorithm.initialPopulation();
         
         
@@ -27,7 +27,7 @@ public class VehicleRoutingProblem {
 
         int terminateGeneration = 20;
         int round = 0;
-        // Boolean stop;
+        Boolean stop;
         do {
             geneticAlgorithm.evaluation(preparator.getDistance(), preparator.getTravelDuration(),
                     preparator.getNodeDuration());
@@ -53,14 +53,12 @@ public class VehicleRoutingProblem {
 
             generationData.add(g);
 
-            // stop = geneticAlgorithm.isTerminate();
-            if (round < terminateGeneration) {
+            stop = geneticAlgorithm.isTerminate();
+            if (!stop) {
                 geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
                         preparator.getNodeDuration());
-                // stop = true;
             }
-            round++;
-        } while (round < terminateGeneration);
+        } while (!stop);
         long stopTime = System.currentTimeMillis();
 
         printGeneration(generationData.get(generationData.size()-1));
