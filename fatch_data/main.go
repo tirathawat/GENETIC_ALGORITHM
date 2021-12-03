@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 
 	resty "gopkg.in/resty.v1"
 )
@@ -136,22 +134,22 @@ func main() {
 	arr5 := filterAddress(address, 32, 9)
 	destinations5 := getDestinations(arr5)
 
-	data := make([]map[string]interface{}, 0)
-	temp1 := map[string]interface{}{}
-	temp2 := map[string]interface{}{}
-	temp3 := map[string]interface{}{}
-	temp4 := map[string]interface{}{}
-	temp5 := map[string]interface{}{}
-	temp6 := map[string]interface{}{}
-	temp7 := map[string]interface{}{}
-	temp8 := map[string]interface{}{}
-	temp9 := map[string]interface{}{}
-	temp10 := map[string]interface{}{}
-	temp11 := map[string]interface{}{}
-	temp12 := map[string]interface{}{}
-	temp13 := map[string]interface{}{}
-	temp14 := map[string]interface{}{}
-	temp15 := map[string]interface{}{}
+	// data := make([]map[string]interface{}, 0)
+	// temp1 := map[string]interface{}{}
+	// temp2 := map[string]interface{}{}
+	// temp3 := map[string]interface{}{}
+	// temp4 := map[string]interface{}{}
+	// temp5 := map[string]interface{}{}
+	// temp6 := map[string]interface{}{}
+	// temp7 := map[string]interface{}{}
+	// temp8 := map[string]interface{}{}
+	// temp9 := map[string]interface{}{}
+	// temp10 := map[string]interface{}{}
+	// temp11 := map[string]interface{}{}
+	// temp12 := map[string]interface{}{}
+	// temp13 := map[string]interface{}{}
+	// temp14 := map[string]interface{}{}
+	// temp15 := map[string]interface{}{}
 
 	fmt.Println(destinations1)
 	fmt.Println()
@@ -169,203 +167,262 @@ func main() {
 	fmt.Println()
 	fmt.Println()
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations1,
-			"destinations": destinations2,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp1).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	type Data struct {
+		Results []struct {
+			AddressComponents []struct {
+				LongName  string   `json:"long_name"`
+				ShortName string   `json:"short_name"`
+				Types     []string `json:"types"`
+			} `json:"address_components"`
+			FormattedAddress string `json:"formatted_address"`
+			Geometry         struct {
+				Bounds struct {
+					Northeast struct {
+						Lat float64 `json:"lat"`
+						Lng float64 `json:"lng"`
+					} `json:"northeast"`
+					Southwest struct {
+						Lat float64 `json:"lat"`
+						Lng float64 `json:"lng"`
+					} `json:"southwest"`
+				} `json:"bounds"`
+				Location struct {
+					Lat float64 `json:"lat"`
+					Lng float64 `json:"lng"`
+				} `json:"location"`
+				LocationType string `json:"location_type"`
+				Viewport     struct {
+					Northeast struct {
+						Lat float64 `json:"lat"`
+						Lng float64 `json:"lng"`
+					} `json:"northeast"`
+					Southwest struct {
+						Lat float64 `json:"lat"`
+						Lng float64 `json:"lng"`
+					} `json:"southwest"`
+				} `json:"viewport"`
+			} `json:"geometry"`
+			PlaceID string   `json:"place_id"`
+			Types   []string `json:"types"`
+		} `json:"results"`
+		Status string `json:"status"`
+	}
 
-	data = append(data, temp1)
+	for index, adr := range address {
+		data := Data{}
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations1,
-			"destinations": destinations3,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp2).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+		_, _ = resty.R().
+			SetQueryParams(map[string]string{
+				"address": adr,
+				"key":     "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+			}).
+			SetHeader("Content-Type", "application/json").
+			SetResult(&data).
+			Get("https://maps.googleapis.com/maps/api/geocode/json")
+		fmt.Println(data.Results[0].Geometry.Location.Lat, data.Results[0].Geometry.Location.Lng)
 
-	data = append(data, temp2)
+		if index == 40 {
+			break
+		}
+	}
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations1,
-			"destinations": destinations4,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp3).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations1,
+	// 		"destinations": destinations2,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp1).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp3)
+	// data = append(data, temp1)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations1,
-			"destinations": destinations5,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp4).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations1,
+	// 		"destinations": destinations3,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp2).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp4)
+	// data = append(data, temp2)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations2,
-			"destinations": destinations3,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp5).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations1,
+	// 		"destinations": destinations4,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp3).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp5)
+	// data = append(data, temp3)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations2,
-			"destinations": destinations4,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp6).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations1,
+	// 		"destinations": destinations5,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp4).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp6)
+	// data = append(data, temp4)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations2,
-			"destinations": destinations5,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp7).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations2,
+	// 		"destinations": destinations3,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp5).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp7)
+	// data = append(data, temp5)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations3,
-			"destinations": destinations4,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp8).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations2,
+	// 		"destinations": destinations4,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp6).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp8)
+	// data = append(data, temp6)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations3,
-			"destinations": destinations5,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp9).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations2,
+	// 		"destinations": destinations5,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp7).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp9)
+	// data = append(data, temp7)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations4,
-			"destinations": destinations5,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp10).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations3,
+	// 		"destinations": destinations4,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp8).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp10)
+	// data = append(data, temp8)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations1,
-			"destinations": destinations1,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp11).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations3,
+	// 		"destinations": destinations5,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp9).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp11)
+	// data = append(data, temp9)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations2,
-			"destinations": destinations2,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp12).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations4,
+	// 		"destinations": destinations5,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp10).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp12)
+	// data = append(data, temp10)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations3,
-			"destinations": destinations3,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp13).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations1,
+	// 		"destinations": destinations1,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp11).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp13)
+	// data = append(data, temp11)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations4,
-			"destinations": destinations4,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp14).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations2,
+	// 		"destinations": destinations2,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp12).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp14)
+	// data = append(data, temp12)
 
-	_, _ = resty.R().
-		SetQueryParams(map[string]string{
-			"units":        "matricts",
-			"origins":      destinations5,
-			"destinations": destinations5,
-			"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
-		}).
-		SetHeader("Content-Type", "application/json").
-		SetResult(&temp15).
-		Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations3,
+	// 		"destinations": destinations3,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp13).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
 
-	data = append(data, temp15)
+	// data = append(data, temp13)
 
-	file, _ := json.MarshalIndent(data, "", " ")
-	_ = ioutil.WriteFile("data2.json", file, 0644)
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations4,
+	// 		"destinations": destinations4,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp14).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+
+	// data = append(data, temp14)
+
+	// _, _ = resty.R().
+	// 	SetQueryParams(map[string]string{
+	// 		"units":        "matricts",
+	// 		"origins":      destinations5,
+	// 		"destinations": destinations5,
+	// 		"key":          "AIzaSyAli5QrCpRYAo64purb3ufAKICZyXWcjj8",
+	// 	}).
+	// 	SetHeader("Content-Type", "application/json").
+	// 	SetResult(&temp15).
+	// 	Get("https://maps.googleapis.com/maps/api/distancematrix/json")
+
+	// data = append(data, temp15)
+
+	// file, _ := json.MarshalIndent(data, "", " ")
+	// _ = ioutil.WriteFile("data2.json", file, 0644)
 }
 
 func getDestinations(address []string) string {
