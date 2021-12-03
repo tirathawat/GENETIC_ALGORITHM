@@ -33,11 +33,13 @@ class BruteForce {
 
     private ArrayList<Integer> generateInitChromosome() {
         ArrayList<Integer> chromosome = new ArrayList<>();
-        int i = 0;
+        int i = 1;
+        chromosome.add(1);
         while (i < problemSize) {
             chromosome.add(i+1);
             i++;
         }
+        chromosome.add(1);
         return chromosome;
     }
 
@@ -85,7 +87,7 @@ class BruteForce {
             return;
         }
         writer = new BufferedWriter(fileWriter);
-        permute(chromosome, 0, problemSize-1);
+        permute(chromosome, 1, problemSize-2);
 
         try {
             writer.close();
