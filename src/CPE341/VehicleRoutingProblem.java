@@ -17,7 +17,8 @@ public class VehicleRoutingProblem {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(30, 5000, 0.75, 0.01, .75);
+
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 400, 0.7, 0.4, 3000);
         geneticAlgorithm.initialPopulation();
 
         Boolean stop;
@@ -25,20 +26,11 @@ public class VehicleRoutingProblem {
             geneticAlgorithm.evaluation(preparator.getDistance(),
                     preparator.getTravelDuration(),
                     preparator.getNodeDuration());
-
-            generationData.add(new GenerationData(geneticAlgorithm.getGeneration(),
+            GenerationData g = new GenerationData(geneticAlgorithm.getGeneration(),
                     geneticAlgorithm.getPopulation().getIndividuals().get(0),
-                    geneticAlgorithm.getAverageFitness()));
+                    geneticAlgorithm.getAverageFitness());
+            generationData.add(g);
 
-            stop = geneticAlgorithm.isTerminate();
-            if (!stop) {
-                geneticAlgorithm.createNewPopulation(preparator.getDistance(),
-                        preparator.getTravelDuration(),
-                        preparator.getNodeDuration());
-            }
-        } while (!stop);
-        long stopTime = System.currentTimeMillis();
-        for (GenerationData g : generationData) {
             System.out.print("Gen : " + g.getGeneration() + ", ");
             System.out.print("Best distance: " + g.getIndividual().getFitness() / 1000 +
                     "km, ");
@@ -48,16 +40,39 @@ public class VehicleRoutingProblem {
             System.out.print("Days : " +
                     Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
                     + g.getIndividual().getDays().size() + " days), ");
-            System.out.print("Average distance : " + g.getAverageDistance() / 1000 + "km\n");
-        }
+            System.out.print("Average distance : " + g.getAverageDistance() / 1000 +
+                    "km\n");
+
+            stop = geneticAlgorithm.isTerminate();
+            if (!stop) {
+                geneticAlgorithm.createNewPopulation(preparator.getDistance(),
+                        preparator.getTravelDuration(),
+                        preparator.getNodeDuration());
+            }
+        } while (!stop);
+        long stopTime = System.currentTimeMillis();
+        // for (GenerationData g : generationData) {
+        // System.out.print("Gen : " + g.getGeneration() + ", ");
+        // System.out.print("Best distance: " + g.getIndividual().getFitness() / 1000 +
+        // "km, ");
+        // System.out.print("Path : " +
+        // Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
+
+        // System.out.print("Days : " +
+        // Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
+        // + g.getIndividual().getDays().size() + " days), ");
+        // System.out.print("Average distance : " + g.getAverageDistance() / 1000 +
+        // "km\n");
+        // }
         System.out.println("Running Time : " + (stopTime - startTime) + " ms");
 
-        RoutePlotter routePlotter = new RoutePlotter();
-        try {
-            routePlotter.plot(generationData.get(generationData.size() - 1).getIndividual().getPath(), geolocation,
-                    generationData.get(generationData.size() - 1).getIndividual().getDays());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        // RoutePlotter routePlotter = new RoutePlotter();
+        // try {
+        // routePlotter.plot(generationData.get(generationData.size() -
+        // 1).getIndividual().getPath(), geolocation,
+        // generationData.get(generationData.size() - 1).getIndividual().getDays());
+        // } catch (IOException e) {
+        // System.out.println(e.getMessage());
+        // }
     }
 }

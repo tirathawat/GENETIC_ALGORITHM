@@ -31,7 +31,6 @@ func readFile(filename string) []string {
 
 func getFitness(s string) (float64, float64) {
 	elements := strings.Split(s, " ")
-	elements = elements[len(elements)-2:]
 
 	time, err := strconv.ParseFloat(elements[0], 64)
 	if err != nil {
@@ -76,7 +75,7 @@ func main() {
 	var wg sync.WaitGroup
 	var mutex sync.Mutex
 
-	solutions = readFile("solutions10.txt")
+	solutions = readFile("solutions10-final.txt")
 
 	for index, solution := range solutions {
 		wg.Add(1)
