@@ -18,7 +18,7 @@ public class VehicleRoutingProblem {
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
 
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 400, 0.7, 0.4, 3000);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 200, 0.75, 0.01, .3);
         geneticAlgorithm.initialPopulation();
 
         Boolean stop;

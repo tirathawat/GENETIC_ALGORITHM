@@ -9,17 +9,17 @@ class GeneticAlgorithm {
     private int populationSize;
     private double crossoverRate;
     private double mutationRate;
-    private int terminateGeneration;
+    private double terminateRate;
     private Population population;
     private int generation;
     private int problemSize;
 
     GeneticAlgorithm(int problemSize, int populationSize, double crossoverRate, double mutationRate,
-            int terminateGeneration) {
+            double terminateRate) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
-        this.terminateGeneration = terminateGeneration;
+        this.terminateRate = terminateRate;
         this.generation = 1;
         this.problemSize = problemSize;
     }
@@ -47,14 +47,10 @@ class GeneticAlgorithm {
         Collections.sort(population.getIndividuals());
     }
 
-    // boolean isTerminate() {
-    // int modeFrequency = presortMode(population.getIndividuals());
-    // double percent = ((double) modeFrequency / populationSize);
-    // return percent >= terminateRate;
-    // }
-
     boolean isTerminate() {
-        return generation >= terminateGeneration;
+        int modeFrequency = presortMode(population.getIndividuals());
+        double percent = ((double) modeFrequency / populationSize);
+        return percent >= terminateRate;
     }
 
     private int presortMode(ArrayList<Individual> individuals) {
