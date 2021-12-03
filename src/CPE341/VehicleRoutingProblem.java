@@ -33,7 +33,7 @@ public class VehicleRoutingProblem {
             if (!stop) {
                 geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
                         preparator.getNodeDuration());
-                stop = true;
+                // stop = true;
             }
         } while (!stop);
         long stopTime = System.currentTimeMillis();
@@ -49,9 +49,8 @@ public class VehicleRoutingProblem {
             System.out.print("Gen : " + g.getGeneration() + ", ");
             System.out.print("Best distance: " + g.getIndividual().getFitness() / 1000 + "km, ");
             System.out.print("Best time: " + g.getIndividual().getTimeFitness() / 60 + "m, ");
-            // System.out.print("Path : " +
-            // Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
-
+            System.out.print("Path : " +
+            Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
             System.out.print("Days : " +
             Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
             + g.getIndividual().getDays().size() + " days), ");

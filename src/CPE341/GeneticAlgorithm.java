@@ -291,8 +291,8 @@ class GeneticAlgorithm {
                 }
             }
         }
-        plotIndividuals(individuals, -1);
-        plotIndividuals(individuals, 1);
+        // plotIndividuals(individuals, -1);
+        // plotIndividuals(individuals, 1);
     }
 
     void plotIndividuals(ArrayList<Individual> individuals, int rank) {
