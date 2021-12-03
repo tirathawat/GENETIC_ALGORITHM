@@ -34,47 +34,24 @@ class BruteForce {
     private ArrayList<Integer> generateInitChromosome() {
         ArrayList<Integer> chromosome = new ArrayList<>();
         int i = 1;
-        chromosome.add(1);
-        while (i < problemSize) {
-            chromosome.add(i+1);
+        while (i <= problemSize) {
+            chromosome.add(i + 1);
             // chromosome.add(i+1);
             i++;
         }
-        chromosome.add(1);
         return chromosome;
     }
 
-    private Boolean isInArray (int target, ArrayList<Integer> set) {
-        for (Integer item : set) {
-            if (item == target) return true;
-        }
-        return false;
-    }
-
-    private void test () {
-        ArrayList<Integer> used = new ArrayList<>();
-    }
-
-    private void printChromosome (ArrayList<Integer> target) {
+    private void printChromosome(ArrayList<Integer> target) {
         for (Integer item : target) {
             System.out.print(item);
         }
         System.out.println("");
     }
-    
-
-    private Boolean isChromosomeValid (ArrayList<Integer> target) {
-        for (int i = 0; i < target.size(); i++) {
-            for (int j = 0; j < target.size(); j++) {
-                if (i!=j && target.get(i) == target.get(j)) return false;
-            }
-        }
-        return true;
-    }
 
     void permute(ArrayList<Integer> chromosome, int l, int r) {
-        if (l == r){
-            printChromosome(chromosome);
+        if (l == r) {
+            // printChromosome(chromosome);
             Individual ind = new Individual(chromosome);
             ind.calculateFitness(distance, travelDuration, nodeDuration);
             individuals.add(ind);
@@ -84,26 +61,22 @@ class BruteForce {
             } catch (IOException err) {
                 System.out.println(err);
             }
-        }
-        else
-        {
-            for (int i = l; i <= r; i++)
-            {
+        } else {
+            for (int i = l; i <= r; i++) {
                 Collections.swap(chromosome, l, i);
-                permute(chromosome, l+1, r);
+                permute(chromosome, l + 1, r);
                 Collections.swap(chromosome, l, i);
             }
         }
     }
 
-    public void calculate (int[][] _distance, int[][] _travelDuration, int[] _nodeDuration) {
+    public void calculate(int[][] _distance, int[][] _travelDuration, int[] _nodeDuration) {
         System.out.println("starting..");
 
         distance = _distance;
         travelDuration = _travelDuration;
         nodeDuration = _nodeDuration;
 
-        
         // ScatterPlot scatterPlotBruteForce = new ScatterPlot("Brute Force Result");
         // HashMap<Double, Double> data = new HashMap<Double, Double>();
 
@@ -115,60 +88,60 @@ class BruteForce {
             return;
         }
         writer = new BufferedWriter(fileWriter);
-        permute(chromosome, 1, problemSize-2);
+        permute(chromosome, 0, problemSize - 1);
 
-        
         // ArrayList<Individual> individuals = new ArrayList<>();
 
         // int l = 0;
         // int r = problemSize-1;
         // for (int i = l; i <= r; i++)
         // {
-        //     str = swap(str,l,i);
-        //     permute(str, l+1, r);
-        //     str = swap(str,l,i);
+        // str = swap(str,l,i);
+        // permute(str, l+1, r);
+        // str = swap(str,l,i);
         // }
 
         // while (true) {
-        //     if (isChromosomeValid(chromosome)) {
-        //         printChromosome(chromosome);
-        //         Individual ind = new Individual(chromosome);
-        //         ind.calculateFitness(distance, travelDuration, nodeDuration);
-        //         // individuals.add(ind);
-        //         // data.put(ind.getTimeFitness(), ind.getFitness());
-        //         try {
-        //             writer.write(ind.getChromosome().toString() + " " + ind.getTimeFitness() + " " + ind.getFitness() + "\n");
-        //         } catch (IOException err) {
-        //             System.out.println(err);
-        //         }
-        //     }
-        //     int pivot = problemSize-1;
-        //     while (pivot>=0) {
-        //         if (chromosome.get(pivot)==problemSize) {
-        //             chromosome.set(pivot, 1);
-        //             pivot--;
-        //         }
-        //         else {
-        //             chromosome.set(pivot, chromosome.get(pivot) + 1);
-        //             break;
-        //         }
-        //     }
-        //     // printChromosome(chromosome);
-        //     if (pivot<0) break; 
+        // if (isChromosomeValid(chromosome)) {
+        // printChromosome(chromosome);
+        // Individual ind = new Individual(chromosome);
+        // ind.calculateFitness(distance, travelDuration, nodeDuration);
+        // // individuals.add(ind);
+        // // data.put(ind.getTimeFitness(), ind.getFitness());
+        // try {
+        // writer.write(ind.getChromosome().toString() + " " + ind.getTimeFitness() + "
+        // " + ind.getFitness() + "\n");
+        // } catch (IOException err) {
+        // System.out.println(err);
+        // }
+        // }
+        // int pivot = problemSize-1;
+        // while (pivot>=0) {
+        // if (chromosome.get(pivot)==problemSize) {
+        // chromosome.set(pivot, 1);
+        // pivot--;
+        // }
+        // else {
+        // chromosome.set(pivot, chromosome.get(pivot) + 1);
+        // break;
+        // }
+        // }
+        // // printChromosome(chromosome);
+        // if (pivot<0) break;
         // }
 
-        printParetoFront(individuals);
+        // printParetoFront(individuals);
 
         try {
             writer.close();
         } catch (IOException err) {
             System.out.println(err);
         }
-        // scatterPlotBruteForce.plot(scatterPlotBruteForce.createDataSet("Brute Force Result", data), "Brute Force Result", "Distance(km)", "Time(m)");
+        // scatterPlotBruteForce.plot(scatterPlotBruteForce.createDataSet("Brute Force
+        // Result", data), "Brute Force Result", "Distance(km)", "Time(m)");
         // printParetoFront(individuals);
     }
 
-    
     void printParetoFront(ArrayList<Individual> individuals) {
         System.out.println("Starting pareto..");
         ScatterPlot scatterPlotPareto = new ScatterPlot("Pareto Result");
@@ -188,7 +161,8 @@ class BruteForce {
                 dataPareto.put(p.getTimeFitness(), p.getFitness());
             }
         }
-        scatterPlotPareto.plot(scatterPlotPareto.createDataSet("Brute Force Result", dataPareto), "Pareto Result", "Distance(km)", "Time(m)");
+        scatterPlotPareto.plot(scatterPlotPareto.createDataSet("Brute Force Result", dataPareto), "Pareto Result",
+                "Distance(km)", "Time(m)");
     }
 
 }
