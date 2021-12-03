@@ -74,6 +74,7 @@ class BruteForce {
 
     void permute(ArrayList<Integer> chromosome, int l, int r) {
         if (l == r){
+            // printChromosome(chromosome);
             Individual ind = new Individual(chromosome);
             ind.calculateFitness(distance, travelDuration, nodeDuration);
             individuals.add(ind);
