@@ -22,13 +22,13 @@ class BruteForce {
     private FileWriter fileWriter;
     private BufferedWriter writer;
 
-    private ScatterPlot scatterPlotBruteForce;
-    private HashMap<Double, Double> data = new HashMap<Double, Double>();
+    private Individual bestIndividual;
 
     private ArrayList<Individual> individuals = new ArrayList<>();
 
     BruteForce(int problemSize) {
         this.problemSize = problemSize;
+        bestIndividual = new Individual(generateInitChromosome());
     }
 
     private ArrayList<Integer> generateInitChromosome() {
@@ -36,21 +36,9 @@ class BruteForce {
         int i = 0;
         while (i < problemSize) {
             chromosome.add(i+1);
-            // chromosome.add(i+1);
             i++;
         }
         return chromosome;
-    }
-
-    private Boolean isInArray (int target, ArrayList<Integer> set) {
-        for (Integer item : set) {
-            if (item == target) return true;
-        }
-        return false;
-    }
-
-    private void test () {
-        ArrayList<Integer> used = new ArrayList<>();
     }
 
     private void printChromosome (ArrayList<Integer> target) {
@@ -59,27 +47,14 @@ class BruteForce {
         }
         System.out.println("");
     }
-    
-
-    private Boolean isChromosomeValid (ArrayList<Integer> target) {
-        for (int i = 0; i < target.size(); i++) {
-            for (int j = 0; j < target.size(); j++) {
-                if (i!=j && target.get(i) == target.get(j)) return false;
-            }
-        }
-        return true;
-    }
 
     void permute(ArrayList<Integer> chromosome, int l, int r) {
         if (l == r){
             Individual ind = new Individual(chromosome);
             ind.calculateFitness(distance, travelDuration, nodeDuration);
-            individuals.add(ind);
-            // data.put(ind.getTimeFitness(), ind.getFitness());
-            try {
-                writer.write(ind.getTimeFitness() + " " + ind.getFitness() + "\n");
-            } catch (IOException err) {
-                System.out.println(err);
+            if (bestIndividual.getFitness() > ind.getFitness()) {
+                bestIndividual.setChromosome(chromosome);
+                bestIndividual.calculateFitness(distance, travelDuration, nodeDuration);
             }
         }
         else
@@ -100,9 +75,7 @@ class BruteForce {
         travelDuration = _travelDuration;
         nodeDuration = _nodeDuration;
 
-        
-        // ScatterPlot scatterPlotBruteForce = new ScatterPlot("Brute Force Result");
-        // HashMap<Double, Double> data = new HashMap<Double, Double>();
+        bestIndividual.calculateFitness(distance, travelDuration, nodeDuration);
 
         ArrayList<Integer> chromosome = generateInitChromosome();
         try {
@@ -114,55 +87,16 @@ class BruteForce {
         writer = new BufferedWriter(fileWriter);
         permute(chromosome, 0, problemSize-1);
 
-        
-        // ArrayList<Individual> individuals = new ArrayList<>();
-
-        // int l = 0;
-        // int r = problemSize-1;
-        // for (int i = l; i <= r; i++)
-        // {
-        //     str = swap(str,l,i);
-        //     permute(str, l+1, r);
-        //     str = swap(str,l,i);
-        // }
-
-        // while (true) {
-        //     if (isChromosomeValid(chromosome)) {
-        //         printChromosome(chromosome);
-        //         Individual ind = new Individual(chromosome);
-        //         ind.calculateFitness(distance, travelDuration, nodeDuration);
-        //         // individuals.add(ind);
-        //         // data.put(ind.getTimeFitness(), ind.getFitness());
-        //         try {
-        //             writer.write(ind.getChromosome().toString() + " " + ind.getTimeFitness() + " " + ind.getFitness() + "\n");
-        //         } catch (IOException err) {
-        //             System.out.println(err);
-        //         }
-        //     }
-        //     int pivot = problemSize-1;
-        //     while (pivot>=0) {
-        //         if (chromosome.get(pivot)==problemSize) {
-        //             chromosome.set(pivot, 1);
-        //             pivot--;
-        //         }
-        //         else {
-        //             chromosome.set(pivot, chromosome.get(pivot) + 1);
-        //             break;
-        //         }
-        //     }
-        //     // printChromosome(chromosome);
-        //     if (pivot<0) break; 
-        // }
-
-        printParetoFront(individuals);
-
         try {
             writer.close();
         } catch (IOException err) {
             System.out.println(err);
         }
-        // scatterPlotBruteForce.plot(scatterPlotBruteForce.createDataSet("Brute Force Result", data), "Brute Force Result", "Distance(km)", "Time(m)");
-        // printParetoFront(individuals);
+        if(bestIndividual!=null) {
+            printChromosome(bestIndividual.getChromosome());
+            System.out.println("Best Path : " + bestIndividual.getChromosome().toString());
+            System.out.println("Best Fitness : " + bestIndividual.getFitness());
+        }
     }
 
     

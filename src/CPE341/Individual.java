@@ -50,6 +50,10 @@ class Individual implements Comparable<Individual> {
         return fitness;
     }
 
+    void setChromosome(ArrayList<Integer> target) {
+        this.chromosome = new ArrayList<>(target);
+    }
+
     double getCrowdingDistance() {
         return crowdingDistance;
     }
