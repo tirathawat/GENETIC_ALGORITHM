@@ -34,8 +34,8 @@ class BruteForce {
     private ArrayList<Integer> generateInitChromosome() {
         ArrayList<Integer> chromosome = new ArrayList<>();
         int i = 1;
-        chromosome.add( 1);
-        while (i < problemSize-1) {
+        chromosome.add(1);
+        while (i < problemSize) {
             chromosome.add(i+1);
             // chromosome.add(i+1);
             i++;
@@ -74,7 +74,7 @@ class BruteForce {
 
     void permute(ArrayList<Integer> chromosome, int l, int r) {
         if (l == r){
-            // printChromosome(chromosome);
+            printChromosome(chromosome);
             Individual ind = new Individual(chromosome);
             ind.calculateFitness(distance, travelDuration, nodeDuration);
             individuals.add(ind);
