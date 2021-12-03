@@ -78,18 +78,6 @@ class GeneticAlgorithm {
         return modeFrequency;
     }
 
-    private Individual rouletteWheelSelection() {
-        double partialSum = 0;
-        double roulette;
-        roulette = Math.random();
-        for (Individual individual : population.getIndividuals()) {
-            partialSum += individual.getFitnessRatio();
-            if (partialSum >= roulette)
-                return individual;
-        }
-        return null;
-    }
-
     private Individual crossover(Individual parent1, Individual parent2) {
         ArrayList<Integer> offspring = new ArrayList<>();
         for (int i = 1; i < problemSize + 1; i++)
@@ -110,16 +98,15 @@ class GeneticAlgorithm {
         return new Individual(offspring);
     }
 
-    // private void mutation(int[][] distance, int[][] travelDuration, int[]
-    // nodeDuration,
-    // ArrayList<Individual> individuals) {
-    // for (int i = 1; i < populationSize && mutationRate != 0; i++)
-    // if (Math.random() < mutationRate) {
-    // population.getIndividuals().get(i).generateChromosome(problemSize);
-    // population.getIndividuals().get(i).calculateFitness(distance, travelDuration,
-    // nodeDuration);
-    // }
-    // }
+    private void mutation(int[][] distance, int[][] travelDuration, int[] nodeDuration,
+            ArrayList<Individual> individuals) {
+        for (int i = 1; i < populationSize && mutationRate != 0; i++)
+            if (Math.random() < mutationRate) {
+                population.getIndividuals().get(i).generateChromosome(problemSize);
+                population.getIndividuals().get(i).calculateFitness(distance, travelDuration,
+                        nodeDuration);
+            }
+    }
 
     private void specificMutation(int[][] distance, int[][] travelDuration, int[] nodeDuration, Individual individual) {
         individual.generateChromosome(problemSize);
@@ -158,11 +145,12 @@ class GeneticAlgorithm {
         for (int i = 0; newIndividuals.size() < populationSize; i++) {
             // specificMutation(distance, travelDuration, nodeDuration,
             // population.getIndividuals().get(i));
-            if (Math.random() < mutationRate) {
-                specificMutation(distance, travelDuration, nodeDuration, population.getIndividuals().get(i));
-            }
+            // if (Math.random() < mutationRate) {
+            //     specificMutation(distance, travelDuration, nodeDuration, population.getIndividuals().get(i));
+            // }
             newIndividuals.add(population.getIndividuals().get(i));
         }
+        mutation(distance, travelDuration, nodeDuration, population.getIndividuals());
 
         /// Merge Parent & Child
         for (int i = 0; i < populationSize; i++) {
@@ -303,7 +291,8 @@ class GeneticAlgorithm {
                 }
             }
         }
-        // plotIndividuals(individuals, -1);
+        plotIndividuals(individuals, -1);
+        plotIndividuals(individuals, 1);
     }
 
     void plotIndividuals(ArrayList<Individual> individuals, int rank) {

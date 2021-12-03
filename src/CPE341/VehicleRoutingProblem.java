@@ -33,6 +33,7 @@ public class VehicleRoutingProblem {
             if (!stop) {
                 geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
                         preparator.getNodeDuration());
+                stop = true;
             }
         } while (!stop);
         long stopTime = System.currentTimeMillis();
