@@ -34,12 +34,10 @@ class BruteForce {
     private ArrayList<Integer> generateInitChromosome() {
         ArrayList<Integer> chromosome = new ArrayList<>();
         int i = 1;
-        chromosome.add(1);
-        while (i < problemSize) {
+        while (i <= problemSize) {
             chromosome.add(i+1);
             i++;
         }
-        chromosome.add(1);
         return chromosome;
     }
 
@@ -54,7 +52,7 @@ class BruteForce {
         if (l == r){
             Individual ind = new Individual(chromosome);
             ind.calculateFitness(distance, travelDuration, nodeDuration);
-            if (bestIndividual.getFitness() > ind.getFitness()) {
+            if (bestIndividual.getTimeFitness() > ind.getTimeFitness()) {
                 bestIndividual.setChromosome(chromosome);
                 bestIndividual.calculateFitness(distance, travelDuration, nodeDuration);
             }
@@ -87,7 +85,7 @@ class BruteForce {
             return;
         }
         writer = new BufferedWriter(fileWriter);
-        permute(chromosome, 1, problemSize-2);
+        permute(chromosome, 0, problemSize-1);
 
         try {
             writer.close();
@@ -97,7 +95,7 @@ class BruteForce {
         if(bestIndividual!=null) {
             printChromosome(bestIndividual.getChromosome());
             System.out.println("Best Path : " + bestIndividual.getChromosome().toString());
-            System.out.println("Best Fitness : " + bestIndividual.getFitness());
+            System.out.println("Best Fitness : " + bestIndividual.getTimeFitness());
         }
     }
 
