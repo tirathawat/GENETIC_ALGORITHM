@@ -17,7 +17,7 @@ public class VehicleRoutingProblem {
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
 
-        BruteForce bruteForce = new BruteForce(10);
+        BruteForce bruteForce = new BruteForce(12);
         bruteForce.calculate(preparator.getDistance(), preparator.getTravelDuration(),
             preparator.getNodeDuration());
         long stopTime = System.currentTimeMillis();

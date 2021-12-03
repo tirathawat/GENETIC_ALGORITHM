@@ -69,7 +69,6 @@ class BruteForce {
     }
 
     public void calculate (int[][] _distance, int[][] _travelDuration, int[] _nodeDuration) {
-        System.out.println("starting..");
 
         distance = _distance;
         travelDuration = _travelDuration;
@@ -93,8 +92,7 @@ class BruteForce {
             System.out.println(err);
         }
         if(bestIndividual!=null) {
-            printChromosome(bestIndividual.getChromosome());
-            System.out.println("Best Path : " + bestIndividual.getChromosome().toString());
+            System.out.println("Best Path : " + bestIndividual.getPath().toString());
             System.out.println("Best Fitness : " + bestIndividual.getTimeFitness());
         }
     }
@@ -116,7 +114,7 @@ class BruteForce {
             }
             if (p.getDominates() == 0) {
                 p.setRank(1);
-                dataPareto.put(p.getTimeFitness(), p.getFitness());
+                dataPareto.put(p.getFitness(), p.getTimeFitness());
             }
         }
         scatterPlotPareto.plot(scatterPlotPareto.createDataSet("Brute Force Result", dataPareto), "Pareto Result", "Distance(km)", "Time(m)");
