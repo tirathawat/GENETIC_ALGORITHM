@@ -111,9 +111,9 @@ class GeneticAlgorithm {
     }
 
     void createNewPopulation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
-        int index = (int) (Math.random() * (population.getIndividuals().size() - 1 - 0 + 1) + 0);
         ArrayList<Individual> newIndividuals = new ArrayList<>();
         for (int i = 0; i < crossoverRate * populationSize; i++) {
+            int index = (int) (Math.random() * (population.getIndividuals().size() - 1 - 0 + 1) + 0);
             Individual individual = crossover(rouletteWheelSelection(), population.getIndividuals().get(index));
             individual.calculateFitness(distance, travelDuration, nodeDuration);
             newIndividuals.add(individual);
