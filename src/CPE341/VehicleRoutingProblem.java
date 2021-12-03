@@ -16,34 +16,27 @@ public class VehicleRoutingProblem {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 5000, 0.75, 0.01, .75);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10, 5000, 0.6, 0.3, 0.5);
         geneticAlgorithm.initialPopulation();
-
-        Boolean stop;
-        do {
-            geneticAlgorithm.evaluation(preparator.getDistance(), preparator.getTravelDuration(),
-                    preparator.getNodeDuration());
-
-            GenerationData newGen = new GenerationData(geneticAlgorithm.getGeneration(),
-                    geneticAlgorithm.getPopulation().getIndividuals().get(0), geneticAlgorithm.getAverageFitness(), geneticAlgorithm.getAverageTimeFitness());
-
-            generationData.add(newGen);
-
-            stop = geneticAlgorithm.isTerminate();
-            if (!stop) {
-                geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
-                        preparator.getNodeDuration());
-                // stop = true;
-            }
-        } while (!stop);
-        long stopTime = System.currentTimeMillis();
+        
         
         ScatterPlot scatterPlotAvg = new ScatterPlot("NSGA-II Result");
         ScatterPlot scatterPlotBest = new ScatterPlot("NSGA-II Result");
         HashMap<Double, Double> dataAvg = new HashMap<Double, Double>();
         HashMap<Double, Double> dataBest = new HashMap<Double, Double>();
 
-        for (GenerationData g : generationData) {
+        int terminateGeneration = 20;
+        int round = 0;
+        // Boolean stop;
+        do {
+            geneticAlgorithm.evaluation(preparator.getDistance(), preparator.getTravelDuration(),
+                    preparator.getNodeDuration());
+
+            GenerationData g = new GenerationData(geneticAlgorithm.getGeneration(),
+                    geneticAlgorithm.getPopulation().getIndividuals().get(0), 
+                    geneticAlgorithm.getAverageFitness(), geneticAlgorithm.getAverageTimeFitness(),
+                    geneticAlgorithm.getPopulation().getIndividuals());
+                    
             dataAvg.put(g.getAverageDistance()/1000,  g.getAverageTime()/60);
             dataBest.put(g.getIndividual().getFitness()/1000,  g.getIndividual().getTimeFitness()/60);
             System.out.print("Gen : " + g.getGeneration() + ", ");
@@ -57,10 +50,31 @@ public class VehicleRoutingProblem {
             System.out.print("Average distance : " + g.getAverageDistance() / 1000 + "km");
             System.out.print("Average time : " + g.getAverageTime() / 60 + "m");
             System.out.println("");
-        }
-        System.out.println("Running Time : " + (stopTime - startTime) + " ms");
-        scatterPlotAvg.plot(scatterPlotAvg.createDataSet("NSGA-II AVG", dataAvg), "NSGA-II Result", "Distance(AVG) (km)", "Time(AVG) (m)");
-        scatterPlotBest.plot(scatterPlotBest.createDataSet("NSGA-II Best", dataBest), "NSGA-II Result", "Distance(Best) (km)", "Time(Best) (m)");
 
+            generationData.add(g);
+
+            // stop = geneticAlgorithm.isTerminate();
+            if (round < terminateGeneration) {
+                geneticAlgorithm.createNewPopulation(preparator.getDistance(), preparator.getTravelDuration(),
+                        preparator.getNodeDuration());
+                // stop = true;
+            }
+            round++;
+        } while (round < terminateGeneration);
+        long stopTime = System.currentTimeMillis();
+
+        printGeneration(generationData.get(generationData.size()-1));
+        System.out.println("Running Time : " + (stopTime - startTime) + " ms");
+        // scatterPlotAvg.plot(scatterPlotAvg.createDataSet("NSGA-II AVG", dataAvg), "NSGA-II Result", "Distance(AVG) (km)", "Time(AVG) (m)");
+        // scatterPlotBest.plot(scatterPlotBest.createDataSet("NSGA-II Best", dataBest), "NSGA-II Result", "Distance(Best) (km)", "Time(Best) (m)");
+    }
+
+    static void printGeneration (GenerationData gen) {
+        ScatterPlot scatterPlotLast = new ScatterPlot("NSGA-II Result");
+        HashMap<Double, Double> dataLast = new HashMap<Double, Double>();
+        for (Individual ind :  gen.getIndividuals()) {
+            dataLast.put(ind.getFitness(), ind.getTimeFitness());
+        }
+        scatterPlotLast.plot(scatterPlotLast.createDataSet("NSGA-II Last Generation", dataLast), "NSGA-II Last Generation", "Distance(km)", "Time(m)");
     }
 }

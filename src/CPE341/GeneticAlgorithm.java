@@ -78,24 +78,79 @@ class GeneticAlgorithm {
         return modeFrequency;
     }
 
-    private Individual crossover(Individual parent1, Individual parent2) {
-        ArrayList<Integer> offspring = new ArrayList<>();
-        for (int i = 1; i < problemSize + 1; i++)
-            offspring.add(null);
-        Random random = new Random();
-        int startPoint = random.nextInt(problemSize / 2) + 1;
-        int endPoint = random.nextInt(problemSize - 1 - startPoint) + (startPoint + 1);
-        for (int i = startPoint + 1; i <= endPoint; i++)
-            offspring.set(i, parent2.getChromosome().get(i));
-        for (int i = 0; i < problemSize; i++) {
-            if (i <= startPoint || i >= endPoint + 1) {
-                int index = i;
-                while (offspring.contains(parent1.getChromosome().get(index)))
-                    index = offspring.indexOf(parent1.getChromosome().get(index));
-                offspring.set(i, parent1.getChromosome().get(index));
+    public ArrayList<Integer> pmx(ArrayList<Integer> x, ArrayList<Integer> y, int index1, int index2) {
+
+        boolean visited[] = new boolean[x.size() + 2]; // all false, are the node visited?
+
+        ArrayList<Integer> z = new ArrayList<Integer>();// same dimensions as x
+
+        for (int i = 0; i < x.size(); i++) {
+            z.add(0);
+        }
+
+        for (int i = index1; i <= index2; i++) {
+            z.set(i, x.get(i));
+            visited[z.get(i)] = true;
+        }
+        int k = index1;
+        // Traverse parent2
+        for (int i = index1; i <= index2; i++) { // para cada elemento del segmente
+            if (!visited[y.get(i)]) {
+                k = i;
+                int elementToBeCopied = y.get(i); // copiando el elemento desde la madre
+                do {
+                    int V = x.get(k);
+                    // search in the mother ofr the index where the V is.
+                    for (int j = 0; j < y.size(); j++) {
+                        if (y.get(j) == V) {
+                            k = j;
+                        }
+                    }
+                } while (z.get(k) != 0);
+                z.set(k, elementToBeCopied);
+                visited[z.get(k)] = true;
             }
         }
-        return new Individual(offspring);
+
+        // copy the reminder elements from y
+
+        for (int i = 0; i < z.size(); i++) {
+            if (z.get(i) == 0)
+                z.set(i, y.get(i));
+        }
+        return z;
+    }
+    
+    private int randomNumber(int min, int max) {
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
+    }
+    private Individual crossover(Individual parent1, Individual parent2) {
+        Random firstRNum = new Random();
+        Random secondRNum = new Random();
+
+        int randomNo_Boundary = (parent1.getChromosome().size()) - 1;
+
+        int startPoint = firstRNum.nextInt(randomNo_Boundary);
+        int endPoint = secondRNum.nextInt(randomNo_Boundary);
+
+        while (startPoint == endPoint) {
+            endPoint = secondRNum.nextInt(randomNo_Boundary);
+        }
+
+        if (startPoint > endPoint) {
+            int temp = startPoint;
+            startPoint = endPoint;
+            endPoint = temp;
+        }
+
+        if (randomNumber(0, 1) > 0.5) {
+            return new Individual(pmx(parent1.getChromosome(), parent2.getChromosome(),
+                    startPoint, endPoint));
+        } else {
+            return new Individual(pmx(parent2.getChromosome(), parent1.getChromosome(),
+                    startPoint, endPoint));
+        }
     }
 
     private void mutation(int[][] distance, int[][] travelDuration, int[] nodeDuration,
@@ -106,11 +161,6 @@ class GeneticAlgorithm {
                 population.getIndividuals().get(i).calculateFitness(distance, travelDuration,
                         nodeDuration);
             }
-    }
-
-    private void specificMutation(int[][] distance, int[][] travelDuration, int[] nodeDuration, Individual individual) {
-        individual.generateChromosome(problemSize);
-        individual.calculateFitness(distance, travelDuration, nodeDuration);
     }
 
     Individual tournamentSelection(int index) {
@@ -143,11 +193,6 @@ class GeneticAlgorithm {
         Collections.sort(population.getIndividuals());
 
         for (int i = 0; newIndividuals.size() < populationSize; i++) {
-            // specificMutation(distance, travelDuration, nodeDuration,
-            // population.getIndividuals().get(i));
-            // if (Math.random() < mutationRate) {
-            //     specificMutation(distance, travelDuration, nodeDuration, population.getIndividuals().get(i));
-            // }
             newIndividuals.add(population.getIndividuals().get(i));
         }
         mutation(distance, travelDuration, nodeDuration, population.getIndividuals());
