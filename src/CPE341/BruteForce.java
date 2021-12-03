@@ -52,7 +52,7 @@ class BruteForce {
         if (l == r){
             Individual ind = new Individual(chromosome);
             ind.calculateFitness(distance, travelDuration, nodeDuration);
-            if (bestIndividual.getTimeFitness() > ind.getTimeFitness()) {
+            if (bestIndividual.getFitness() > ind.getFitness()) {
                 bestIndividual.setChromosome(chromosome);
                 bestIndividual.calculateFitness(distance, travelDuration, nodeDuration);
             }
@@ -93,7 +93,7 @@ class BruteForce {
         }
         if(bestIndividual!=null) {
             System.out.println("Best Path : " + bestIndividual.getPath().toString());
-            System.out.println("Best Fitness : " + bestIndividual.getTimeFitness());
+            System.out.println("Best Fitness : " + bestIndividual.getFitness());
         }
     }
 
@@ -114,7 +114,7 @@ class BruteForce {
             }
             if (p.getDominates() == 0) {
                 p.setRank(1);
-                dataPareto.put(p.getFitness(), p.getTimeFitness());
+                dataPareto.put(p.getFitness(), p.getFitness());
             }
         }
         scatterPlotPareto.plot(scatterPlotPareto.createDataSet("Brute Force Result", dataPareto), "Pareto Result", "Distance(km)", "Time(m)");
