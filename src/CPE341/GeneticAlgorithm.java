@@ -163,33 +163,35 @@ class GeneticAlgorithm {
             }
     }
 
-    Individual tournamentSelection(int index) {
-        int pivot = 0;
+    Individual tournamentSelection(int size) {
         int i = 0;
-        while (true) {
-            for (Individual par : population.getIndividuals()) {
-                if (par.getRank() == pivot) {
-                    if (i == index)
-                        return par;
-                    else
-                        i++;
-                }
+        int bestIndex = Integer.MAX_VALUE;
+        while (i < size) {
+            int index = randomNumber(0, populationSize);
+            if (index < bestIndex) {
+                bestIndex = index;
             }
-            pivot++;
+            i++;
         }
+        return population.getIndividuals().get(bestIndex);
     }
 
     void createNewPopulation(int[][] distance, int[][] travelDuration, int[] nodeDuration) {
         int index = (int) (Math.random() * (population.getIndividuals().size() - 1 - 0 + 1) + 0);
         ArrayList<Individual> newIndividuals = new ArrayList<>();
-        int tournamentIndex = 0;
+        int tournamentSize = 10;
+        
+        fastNonDominatedSort(population.getIndividuals());
+        crowindDistanceAssignment(population.getIndividuals());
+        selectionSortByCrowdingDistance(population.getIndividuals());
+
         for (int i = 0; i < crossoverRate * populationSize; i++) {
-            Individual individual = crossover(tournamentSelection(tournamentIndex),
-                    population.getIndividuals().get(index)); // Tournament selection to select for two point crossover.
-            tournamentIndex++; // Increase Tournamet selection index.
+            Individual individual = crossover(tournamentSelection(tournamentSize),
+                    population.getIndividuals().get(index));
             individual.calculateFitness(distance, travelDuration, nodeDuration);
             newIndividuals.add(individual);
         }
+
         Collections.sort(population.getIndividuals());
 
         for (int i = 0; newIndividuals.size() < populationSize; i++) {
@@ -216,7 +218,6 @@ class GeneticAlgorithm {
         }
 
         fastNonDominatedSort(newIndividuals);
-
         crowindDistanceAssignment(newIndividuals);
         selectionSortByCrowdingDistance(newIndividuals);
 
@@ -273,8 +274,8 @@ class GeneticAlgorithm {
         int pos;
         for (int i = 0; i < individuals.size(); i++) {
             pos = i;
-            for (int j = i + 1; j < individuals.size(); j++) {
-                if (individuals.get(j).getCrowdingDistance() < individuals.get(pos).getCrowdingDistance()) {
+            for (int j = i + 1; j > individuals.size(); j++) {
+                if (individuals.get(j).getCrowdingDistance() > individuals.get(pos).getCrowdingDistance()) {
                     pos = j;
                 }
             }

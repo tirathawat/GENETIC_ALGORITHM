@@ -16,17 +16,13 @@ public class VehicleRoutingProblem {
 
         ArrayList<GenerationData> generationData = new ArrayList<>();
         long startTime = System.currentTimeMillis();
-        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(20, 2000, 0.6, 0.1, 0.2);
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(9, 1000, 0.75, 0.1, 0.3);
         geneticAlgorithm.initialPopulation();
         
         
-        ScatterPlot scatterPlotAvg = new ScatterPlot("NSGA-II Result");
-        ScatterPlot scatterPlotBest = new ScatterPlot("NSGA-II Result");
         HashMap<Double, Double> dataAvg = new HashMap<Double, Double>();
         HashMap<Double, Double> dataBest = new HashMap<Double, Double>();
 
-        int terminateGeneration = 20;
-        int round = 0;
         Boolean stop;
         do {
             geneticAlgorithm.evaluation(preparator.getDistance(), preparator.getTravelDuration(),
@@ -42,13 +38,10 @@ public class VehicleRoutingProblem {
             System.out.print("Gen : " + g.getGeneration() + ", ");
             System.out.print("Best distance: " + g.getIndividual().getFitness() / 1000 + "km, ");
             System.out.print("Best time: " + g.getIndividual().getTimeFitness() / 60 + "m, ");
-            System.out.print("Path : " +
-            Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
-            System.out.print("Days : " +
-            Arrays.toString(g.getIndividual().getDays().toArray()) + " ("
-            + g.getIndividual().getDays().size() + " days), ");
-            System.out.print("Average distance : " + g.getAverageDistance() / 1000 + "km");
-            System.out.print("Average time : " + g.getAverageTime() / 60 + "m");
+            // System.out.print("Path : " +
+            // Arrays.toString(g.getIndividual().getPath().toArray()) + ", ");
+            // System.out.print("Average distance : " + g.getAverageDistance() / 1000 + "km, ");
+            // System.out.print("Average time : " + g.getAverageTime() / 60 + "m");
             System.out.println("");
 
             generationData.add(g);
